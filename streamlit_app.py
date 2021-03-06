@@ -16,9 +16,12 @@ st.title("Let's analyze some Penguin Data 🐧📊.") #how did he get this emoji
 @st.cache  # add caching so we load the data only once
 def load_data():
     # Load the penguin data from https://github.com/allisonhorst/palmerpenguins.
-    penguins_url = "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/v0.1.0/inst/extdata/penguins.csv"
-    return pd.read_csv(penguins_url)
+    #penguins_url = "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/v0.1.0/inst/extdata/penguins.csv"
 
+    # safegraph: The fraction of devices that spent between 3 and 6 hours at a location other than their home during the daytime
+    data1 = covidcast.signal("safegraph", "part_time_work_prop", date(2020, 10, 1), date(2021, 3, 1), "county")
+    #return pd.read_csv(penguins_url)
+    return data1
 df = load_data()
 
 st.write("Let's look at raw data in the Pandas Data Frame.")
