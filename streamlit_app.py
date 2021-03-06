@@ -43,11 +43,22 @@ def fetch(dat):
         data1= covidcast.signal("doctor-visits", "smoothed_cli",date(2020, 10, 1), date(2020, 12, 1), "county")
     return data1
     
-data=fetch(1)
-data_PA = pandasql.sqldf("select * from data where geo_value like '42%'")
+data=fetch(3)
+data_barvis_PA = pandasql.sqldf("select * from data where geo_value like '42%'")
 if st.checkbox("Display raw data"):
-    st.write(data_PA)
+    st.write(data_barvis_PA)
+input_drop=alt.binding_select(options=(list(county_details.values())),name="Select County by FIPS code")
+picked=alt.selection_single(encodings=["color"],bind=input_drop) 
+scatter=alt.Chart(bar_dataPA).mark_line().encode(
+    x=alt.X("monthdate(time_value):O"),
 
+    y=alt.Y("value:Q",axis=alt.Axis(title='Average number of daily bar visits')),
+    tooltip=['geo_value','monthdate(time_value)','value'],
+
+    color=alt.condition(picked,'geo_value',alt.value('lightgray')),
+    
+    ).add_selection(picked)
+st.write(scatter)
 
 #st.write("Hmm 🤔, is there some correlation between body mass and flipper length? Let's make a scatterplot with [Altair](https://altair-viz.github.io/) to find.")
 
