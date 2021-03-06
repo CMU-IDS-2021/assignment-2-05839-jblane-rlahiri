@@ -47,20 +47,20 @@ data=fetch(7)
 if st.checkbox("Display raw data"):
     st.write(data)
 
-"""
-st.write("Hmm 🤔, is there some correlation between body mass and flipper length? Let's make a scatterplot with [Altair](https://altair-viz.github.io/) to find.")
 
-chart = alt.Chart(df).mark_point().encode(
-    x=alt.X("body_mass_g", scale=alt.Scale(zero=False)),
-    y=alt.Y("flipper_length_mm", scale=alt.Scale(zero=False)),
-    color=alt.Y("species")
-).properties(
-    width=600, height=400
-).interactive()
+#st.write("Hmm 🤔, is there some correlation between body mass and flipper length? Let's make a scatterplot with [Altair](https://altair-viz.github.io/) to find.")
 
-st.write(chart)
+#chart = alt.Chart(df).mark_point().encode(
+#    x=alt.X("body_mass_g", scale=alt.Scale(zero=False)),
+#    y=alt.Y("flipper_length_mm", scale=alt.Scale(zero=False)),
+#    color=alt.Y("species")
+#).properties(
+#    width=600, height=400
+#).interactive()
 
-"""
+#st.write(chart)
+
+
 # code for a map
 
 # import altair as alt
