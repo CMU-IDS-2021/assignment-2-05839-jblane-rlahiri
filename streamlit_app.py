@@ -12,7 +12,7 @@ import pandasql
 
 
 #st.title("Let's analyze some Penguin Data 🐧📊.") #how did he get this emoji on here?!
-st.title("Public Behaviour Analysis in Covid-19 from 1st October 2020 to 1st March 2021 for PA")
+st.title("Public Behaviour Analysis in Covid-19 from 1st October 2020 to 1st March 2021 for PA 📊")
 
 # Seems like there's some real delay in fetching 6 months of data so to build the skeletal model considered 2 months, even pre-downloading CSV isn't working well, We'll figure out someway to include 6 months later.
 
