@@ -47,9 +47,19 @@ data=fetch(3)
 data_barvis_PA = pandasql.sqldf("select * from data where geo_value like '42%'")
 if st.checkbox("Display raw data"):
     st.write(data_barvis_PA)
+    
+county_data=pandasql.sqldf("select distinct geo_value from data_barvis_PA")
+county_details=dict()
+print(county_data.shape[0])
+l=county_data["geo_value"].tolist()
+print(str(covidcast.fips_to_name(county_data.iloc[1])))
+for i in range(county_data.shape[0]):
+    county_details.update({str(covidcast.fips_to_name(county_data.iloc[i]))[2:len(str(covidcast.fips_to_name(county_data.iloc[i])))-2]:l[i]})
+
+    
 input_drop=alt.binding_select(options=(list(county_details.values())),name="Select County by FIPS code")
 picked=alt.selection_single(encodings=["color"],bind=input_drop) 
-scatter=alt.Chart(bar_dataPA).mark_line().encode(
+scatter=alt.Chart(data_barvis_PA).mark_line().encode(
     x=alt.X("monthdate(time_value):O"),
 
     y=alt.Y("value:Q",axis=alt.Axis(title='Average number of daily bar visits')),
