@@ -19,7 +19,7 @@ def load_data():
     #penguins_url = "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/v0.1.0/inst/extdata/penguins.csv"
 
     # safegraph: The fraction of devices that spent between 3 and 6 hours at a location other than their home during the daytime
-    data1 = covidcast.signal("safegraph", "part_time_work_prop", date(2020, 10, 1), date(2021, 11, 1), "county")
+    data1 = covidcast.signal("safegraph", "part_time_work_prop", date(2020, 10, 1), date(2020, 11, 1), "county")
     #return pd.read_csv(penguins_url)
     return data1
 df = load_data()
