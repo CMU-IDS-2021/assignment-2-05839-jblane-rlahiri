@@ -43,7 +43,7 @@ def fetch(dat):
         data1= covidcast.signal("doctor-visits", "smoothed_cli",date(2020, 10, 1), date(2020, 12, 1), "county")
     return data1
     
-data=fetch(7)
+data=fetch(1)
 if st.checkbox("Display raw data"):
     st.write(data)
 
