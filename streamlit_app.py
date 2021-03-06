@@ -67,7 +67,7 @@ scatter=alt.Chart(data_barvis_PA).mark_point().encode(
 
     color=alt.condition(picked,'geo_value',alt.value('lightgray')),
     
-    ).add_selection(picked)
+    ).add_selection(picked).properties(width=800,height=400)
 st.write(scatter)
 
 #st.write("Hmm 🤔, is there some correlation between body mass and flipper length? Let's make a scatterplot with [Altair](https://altair-viz.github.io/) to find.")
