@@ -3,7 +3,7 @@ import pandas as pd
 import altair as alt
 from datetime import date
 import covidcast
-
+import pandasql
 
 # Deliverables
 #  An interactive data science or machine learning application using Streamlit.
@@ -44,8 +44,9 @@ def fetch(dat):
     return data1
     
 data=fetch(1)
+data_PA = pandasql.sqldf("select * from data where geo_value like '42%'")
 if st.checkbox("Display raw data"):
-    st.write(data)
+    st.write(data_PA)
 
 
 #st.write("Hmm 🤔, is there some correlation between body mass and flipper length? Let's make a scatterplot with [Altair](https://altair-viz.github.io/) to find.")
