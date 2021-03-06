@@ -19,7 +19,7 @@ def load_data():
     #penguins_url = "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/v0.1.0/inst/extdata/penguins.csv"
 
     # safegraph: The fraction of devices that spent between 3 and 6 hours at a location other than their home during the daytime
-    data1 = covidcast.signal("safegraph", "part_time_work_prop", date(2020, 10, 1), date(2021, 3, 1), "county")
+    data1 = covidcast.signal("safegraph", "part_time_work_prop", date(2020, 10, 1), date(2021, 11, 1), "county")
     #return pd.read_csv(penguins_url)
     return data1
 df = load_data()
@@ -27,7 +27,7 @@ df = load_data()
 st.write("Let's look at raw data in the Pandas Data Frame.")
 
 st.write(df)
-
+"""
 st.write("Hmm 🤔, is there some correlation between body mass and flipper length? Let's make a scatterplot with [Altair](https://altair-viz.github.io/) to find.")
 
 chart = alt.Chart(df).mark_point().encode(
@@ -40,7 +40,7 @@ chart = alt.Chart(df).mark_point().encode(
 
 st.write(chart)
 
-
+"""
 # code for a map
 
 # import altair as alt
