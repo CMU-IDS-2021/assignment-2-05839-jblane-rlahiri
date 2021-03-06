@@ -59,7 +59,7 @@ for i in range(county_data.shape[0]):
     
 input_drop=alt.binding_select(options=(list(county_details.values())),name="Select County by FIPS code")
 picked=alt.selection_single(encodings=["color"],bind=input_drop) 
-scatter=alt.Chart(data_barvis_PA).mark_point().encode(
+scatter=alt.Chart(data_barvis_PA).mark_line().encode(
     x=alt.X("monthdate(time_value):O"),
 
     y=alt.Y("value:Q",axis=alt.Axis(title='Average number of daily bar visits')),
