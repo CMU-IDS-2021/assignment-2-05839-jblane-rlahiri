@@ -30,15 +30,19 @@ def fetch(dat):
     #safegraph: The number of daily visits made by those with SafeGraph’s apps to restaurant-related POIs in a certain region, per 100,000 population
     elif(dat==4):
         data1 = covidcast.signal("safegraph", "restaurants_visit_prop",date(2020, 10, 1), date(2020, 12, 1), "county")
+
     #fb-survey: Estimated percentage of people reporting illness in their local community, including their household, with no survey weighting
     elif(dat==5):    
         data1 = covidcast.signal("fb-survey", "smoothed_hh_cmnty_cli", date(2020, 10, 1), date(2020, 12, 1), "county")
+    
     #fb-survey: Estimated percentage of respondents who reported feeling very or somewhat worried that “you or someone in your immediate family might become seriously ill from COVID-19”
     elif(dat==6):
         data1 = covidcast.signal("fb-survey", "smoothed_worried_become_ill", date(2020, 10, 1), date(2020, 12, 1), "county")
+    
     #fb-survey: Estimated percentage of people with COVID-like illness, with no survey weighting
     elif(dat==7):
         data1 = covidcast.signal("fb-survey", "smoothed_cli",date(2020, 10, 1), date(2020, 12, 1), "county")
+    
     else:
         data1= covidcast.signal("doctor-visits", "smoothed_cli",date(2020, 10, 1), date(2020, 12, 1), "county")
     return data1
@@ -70,35 +74,23 @@ scatter=alt.Chart(data_barvis_PA).mark_line().encode(
     ).add_selection(picked).properties(width=800,height=400)
 st.write(scatter)
 
-#st.write("Hmm 🤔, is there some correlation between body mass and flipper length? Let's make a scatterplot with [Altair](https://altair-viz.github.io/) to find.")
-
-#chart = alt.Chart(df).mark_point().encode(
-#    x=alt.X("body_mass_g", scale=alt.Scale(zero=False)),
-#    y=alt.Y("flipper_length_mm", scale=alt.Scale(zero=False)),
-#    color=alt.Y("species")
-#).properties(
-#    width=600, height=400
-#).interactive()
-
-#st.write(chart)
 
 
-# code for a map
+##---Early indicators section----
+communityIll = fetch(5)
+worryIll = fetch(6)
+selfIll = fetch(7)
+doctorVisits = fetch(8)
 
-# import altair as alt
-# from vega_datasets import data
-
-# counties = alt.topo_feature(data.us_10m.url, 'counties')
-# source = data.unemployment.url
-
-# alt.Chart(counties).mark_geoshape().encode(
-#     color='rate:Q'
-# ).transform_lookup(
-#     lookup='id',
-#     from_=alt.LookupData(source, 'id', ['rate'])
-# ).project(
-#     type='albersUsa'
-# ).properties(
-#     width=500,
-#     height=300
-# )
+if st.checkbox("Display raw data"):
+    st.write(communityIll)
+# domain = ['Resale', 'No Resale']
+# range_ = ['green', 'red']
+# CI=alt.Chart(communityIll).mark_point().encode(
+#     x='Area',
+#     y='Price',
+#     color=alt.Color('Resale_Value', scale=alt.Scale(domain=domain, range=range_)),
+#     tooltip=[alt.Tooltip('Area'),
+#             alt.Tooltip('Price'),
+#             alt.Tooltip('Resale_Value')]
+# ).properties(width=500,height=400,title="Area vs Price against Resale")
