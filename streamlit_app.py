@@ -77,8 +77,8 @@ st.write(scatter)
 
 
 ##---Early indicators section----
-communityIll = fetch(5)
-st.write(communityIll)
+# communityIll = fetch(5)
+# st.write(communityIll)
 
 #worryIll = fetch(6)
 #selfIll = fetch(7)

@@ -46,7 +46,8 @@ def fetch(dat):
     else:
         data1= covidcast.signal("doctor-visits", "smoothed_cli",date(2020, 10, 1), date(2020, 12, 1), "county")
     return data1
-    
+
+
 # data=fetch(3)
 # data_barvis_PA = pandasql.sqldf("select * from data where geo_value like '42%'")
 # if st.checkbox("Display raw data"):
@@ -78,20 +79,26 @@ def fetch(dat):
 
 ##---Early indicators section----
 communityIll = fetch(5)
+worryIll = fetch(6)
 st.write(communityIll)
+st.write(worryIll)
 
-#worryIll = fetch(6)
+#write to .csv
+#communityIlldf = pd.DataFrame(communityIll)
+#communityIlldf.to_csv("communityIll.csv")
+
+#communityIlldf = pd.read_csv("communityIll.csv")
+#st.write(communityIlldf)
+
+
 #selfIll = fetch(7)
 #doctorVisits = fetch(8)
 
 
-# domain = ['Resale', 'No Resale']
-# range_ = ['green', 'red']
-# CI=alt.Chart(communityIll).mark_point().encode(
-#     x='Area',
-#     y='Price',
-#     color=alt.Color('Resale_Value', scale=alt.Scale(domain=domain, range=range_)),
-#     tooltip=[alt.Tooltip('Area'),
-#             alt.Tooltip('Price'),
-#             alt.Tooltip('Resale_Value')]
-# ).properties(width=500,height=400,title="Area vs Price against Resale")
+#domain = ['Resale', 'No Resale']
+#range_ = ['green', 'red']
+CI=alt.Chart(communityIll).mark_point().encode(
+    x='time_value',
+    y='value'
+).properties(width=500,height=400,title="Reporting Illness in Community over Time")
+st.write(CI)
