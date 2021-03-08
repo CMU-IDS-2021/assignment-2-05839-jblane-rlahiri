@@ -82,8 +82,7 @@ communityIll = fetch(5)
 #selfIll = fetch(7)
 #doctorVisits = fetch(8)
 
-if st.checkbox("Display raw data"):
-    st.write(communityIll)
+
 # domain = ['Resale', 'No Resale']
 # range_ = ['green', 'red']
 # CI=alt.Chart(communityIll).mark_point().encode(
