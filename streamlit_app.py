@@ -78,9 +78,9 @@ st.write(scatter)
 
 ##---Early indicators section----
 communityIll = fetch(5)
-worryIll = fetch(6)
-selfIll = fetch(7)
-doctorVisits = fetch(8)
+#worryIll = fetch(6)
+#selfIll = fetch(7)
+#doctorVisits = fetch(8)
 
 if st.checkbox("Display raw data"):
     st.write(communityIll)
