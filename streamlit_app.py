@@ -93,7 +93,7 @@ chart = alt.Chart(doctorVisitsdf).mark_line().encode(
     brush
 )
     
-# st.write(chart)
+st.write(chart)
 
 #https://altair-viz.github.io/gallery/layered_chart_with_dual_axis.html
 #alt.layer(chart1,chart2).resolve_scale(
