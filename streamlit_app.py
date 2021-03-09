@@ -78,21 +78,22 @@ st.write(scatter)
 doctorVisitsdf = pd.read_csv("doctorVisits.csv")
 #PAcountiesdf = (doctorVisitsdf['geo_value'] >= 42000) & (doctorVisitsdf['geo_value' < 43000])
 PAcounties = alt.FieldRangePredicate(field='geo_value',range=[42000,43000])
-input_dropdown = alt.binding_select(options=PAcounties,name="Select County")
+#input_dropdown = alt.binding_select(options=PAcounties,name="Select County")
 brush = alt.selection_interval()
 
 chart = alt.Chart(doctorVisitsdf).mark_line().encode(
     x=alt.X('monthdate(time_value):O',axis=alt.Axis(title="Date")),
     y=alt.Y('value:Q',axis=alt.Axis(title="Indicator Value")),
     color=alt.condition(brush, 'geo_value:N', alt.value('lightgray'))
-).properties(width=500,height=400,title="Reporting Illness in Community over Time"
+).properties(
+    width=500,height=400,title="Reporting Illness in Community over Time"
 ).transform_filter(
     PAcounties
 ).add_selection(
     brush
 )
     
-st.write(chart)
+# st.write(chart)
 
 #https://altair-viz.github.io/gallery/layered_chart_with_dual_axis.html
 #alt.layer(chart1,chart2).resolve_scale(
