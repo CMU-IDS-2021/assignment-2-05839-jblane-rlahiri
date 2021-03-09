@@ -87,7 +87,7 @@ def fetch(dat):
 # worryIlldf = pd.read_csv("worryIll.csv")
 # selfIlldf = pd.read_csv("selfIll.csv")
 doctorVisitsdf = pd.read_csv("doctorVisits.csv")
-# allIndic = pd.read_csv("allIndic.csv")
+#allIndic = pd.read_csv("allIndic.csv")
 # worryIll.to_csv("worryIll.csv")
 # selfIll.to_csv("selfIll.csv")
 # doctorVisits.to_csv("doctorVisits.csv")
@@ -100,12 +100,22 @@ doctorVisitsdf = pd.read_csv("doctorVisits.csv")
 #st.write(communityIlldf)
 
 
-doctorVisitsdf=alt.Chart(doctorVisitsdf).mark_line().encode(
-    x='monthdate(time_value):O',
-    y='value:Q',
-    color='geo_value:N'
-).properties(width=500,height=400,title="Reporting Illness in Community over Time")
-st.write(doctorVisitsdf)
+
+#input_dropdown = alt.binding_select(options=[])
+brush = alt.selection_interval()
+
+chart = alt.Chart(doctorVisitsdf).mark_line().encode(
+    x=alt.X('monthdate(time_value):O',axis=alt.Axis(title="Date")),
+    y=alt.Y('value:Q',axis=alt.Axis(title="Indicator Value")),
+    color=alt.condition(brush, 'geo_value:N', alt.value('lightgray'))
+).properties(width=500,height=400,title="Reporting Illness in Community over Time"
+).transform_filter(
+    alt.FieldRangePredicate(field='geo_value',range=[42000,43000])
+).add_selection(
+    brush
+)
+    
+st.write(chart)
 
 
 # #domain = ['Resale', 'No Resale']
@@ -116,3 +126,24 @@ st.write(doctorVisitsdf)
 #     color='indicator'
 # ).properties(width=500,height=400,title="Reporting Illness in Community over Time")
 # st.write(CI)
+
+
+##---Early indicators section----
+# communityIll = fetch(5)
+# st.write(communityIll)
+
+#worryIll = fetch(6)
+#selfIll = fetch(7)
+#doctorVisits = fetch(8)
+
+
+# domain = ['Resale', 'No Resale']
+# range_ = ['green', 'red']
+# CI=alt.Chart(communityIll).mark_point().encode(
+#     x='Area',
+#     y='Price',
+#     color=alt.Color('Resale_Value', scale=alt.Scale(domain=domain, range=range_)),
+#     tooltip=[alt.Tooltip('Area'),
+#             alt.Tooltip('Price'),
+#             alt.Tooltip('Resale_Value')]
+# ).properties(width=500,height=400,title="Area vs Price against Resale")

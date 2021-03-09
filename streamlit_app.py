@@ -74,24 +74,21 @@ scatter=alt.Chart(data_barvis_PA).mark_line().encode(
     ).add_selection(picked).properties(width=800,height=400)
 st.write(scatter)
 
+#--Doctor's visits
+doctorVisitsdf = pd.read_csv("doctorVisits.csv")
+#input_dropdown = alt.binding_select(options=[])
+brush = alt.selection_interval()
 
+chart = alt.Chart(doctorVisitsdf).mark_line().encode(
+    x=alt.X('monthdate(time_value):O',axis=alt.Axis(title="Date")),
+    y=alt.Y('value:Q',axis=alt.Axis(title="Indicator Value")),
+    color=alt.condition(brush, 'geo_value:N', alt.value('lightgray'))
+).properties(width=500,height=400,title="Reporting Illness in Community over Time"
+).transform_filter(
+    alt.FieldRangePredicate(field='geo_value',range=[42000,43000])
+).add_selection(
+    brush
+)
+    
+st.write(chart)
 
-##---Early indicators section----
-# communityIll = fetch(5)
-# st.write(communityIll)
-
-#worryIll = fetch(6)
-#selfIll = fetch(7)
-#doctorVisits = fetch(8)
-
-
-# domain = ['Resale', 'No Resale']
-# range_ = ['green', 'red']
-# CI=alt.Chart(communityIll).mark_point().encode(
-#     x='Area',
-#     y='Price',
-#     color=alt.Color('Resale_Value', scale=alt.Scale(domain=domain, range=range_)),
-#     tooltip=[alt.Tooltip('Area'),
-#             alt.Tooltip('Price'),
-#             alt.Tooltip('Resale_Value')]
-# ).properties(width=500,height=400,title="Area vs Price against Resale")
