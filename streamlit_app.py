@@ -76,6 +76,7 @@ st.write(scatter)
 
 #--Doctor's visits
 doctorVisitsdf = pd.read_csv("doctorVisits.csv")
+PAcounties = alt.FieldRangePredicate(field='geo_value',range=[42000,43000])
 #input_dropdown = alt.binding_select(options=[])
 brush = alt.selection_interval()
 
@@ -85,7 +86,7 @@ chart = alt.Chart(doctorVisitsdf).mark_line().encode(
     color=alt.condition(brush, 'geo_value:N', alt.value('lightgray'))
 ).properties(width=500,height=400,title="Reporting Illness in Community over Time"
 ).transform_filter(
-    alt.FieldRangePredicate(field='geo_value',range=[42000,43000])
+    PAcounties
 ).add_selection(
     brush
 )
