@@ -78,27 +78,41 @@ def fetch(dat):
 
 
 ##---Early indicators section----
-communityIll = fetch(5)
-worryIll = fetch(6)
-st.write(communityIll)
-st.write(worryIll)
+# communityIll = fetch(5)
+# worryIll = fetch(6)
+# selfIll = fetch(7)
+# doctorVisits = fetch(8)
 
+# communityIlldf = pd.read_csv("communityIll.csv")
+# worryIlldf = pd.read_csv("worryIll.csv")
+# selfIlldf = pd.read_csv("selfIll.csv")
+doctorVisitsdf = pd.read_csv("doctorVisits.csv")
+# allIndic = pd.read_csv("allIndic.csv")
+# worryIll.to_csv("worryIll.csv")
+# selfIll.to_csv("selfIll.csv")
+# doctorVisits.to_csv("doctorVisits.csv")
+# st.write(communityIll)
+# st.write(worryIll)
 #write to .csv
 #communityIlldf = pd.DataFrame(communityIll)
 #communityIlldf.to_csv("communityIll.csv")
-
 #communityIlldf = pd.read_csv("communityIll.csv")
 #st.write(communityIlldf)
 
 
-#selfIll = fetch(7)
-#doctorVisits = fetch(8)
-
-
-#domain = ['Resale', 'No Resale']
-#range_ = ['green', 'red']
-CI=alt.Chart(communityIll).mark_point().encode(
-    x='time_value',
-    y='value'
+doctorVisitsdf=alt.Chart(doctorVisitsdf).mark_line().encode(
+    x='monthdate(time_value):O',
+    y='value:Q',
+    color='geo_value:N'
 ).properties(width=500,height=400,title="Reporting Illness in Community over Time")
-st.write(CI)
+st.write(doctorVisitsdf)
+
+
+# #domain = ['Resale', 'No Resale']
+# #range_ = ['green', 'red']
+# CI=alt.Chart(allIndic).mark_line().encode(
+#     x='monthdate(time_value):O',
+#     y='indicator_value:Q',
+#     color='indicator'
+# ).properties(width=500,height=400,title="Reporting Illness in Community over Time")
+# st.write(CI)
