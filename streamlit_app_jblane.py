@@ -86,7 +86,7 @@ def fetch(dat):
 # communityIlldf = pd.read_csv("communityIll.csv")
 # worryIlldf = pd.read_csv("worryIll.csv")
 # selfIlldf = pd.read_csv("selfIll.csv")
-doctorVisitsdf = pd.read_csv("doctorVisits.csv")
+#doctorVisitsdf = pd.read_csv("doctorVisits.csv")
 #allIndic = pd.read_csv("allIndic.csv")
 # worryIll.to_csv("worryIll.csv")
 # selfIll.to_csv("selfIll.csv")
@@ -100,7 +100,7 @@ doctorVisitsdf = pd.read_csv("doctorVisits.csv")
 #st.write(communityIlldf)
 
 
-
+#---all data
 #input_dropdown = alt.binding_select(options=[])
 brush = alt.selection_interval()
 
@@ -117,6 +117,25 @@ chart = alt.Chart(doctorVisitsdf).mark_line().encode(
     
 st.write(chart)
 
+#--Doctor's visits
+# #PAcountiesdf = (doctorVisitsdf['geo_value'] >= 42000) & (doctorVisitsdf['geo_value' < 43000])
+# PAcounties = alt.FieldRangePredicate(field='geo_value',range=[42000,43000])
+# #input_dropdown = alt.binding_select(options=PAcounties,name="Select County")
+# brush = alt.selection_interval()
+
+# chart = alt.Chart(doctorVisitsdf).mark_line().encode(
+#     x=alt.X('monthdate(time_value):O',axis=alt.Axis(title="Date")),
+#     y=alt.Y('value:Q',axis=alt.Axis(title="Indicator Value")),
+#     color=alt.condition(brush, 'geo_value:N', alt.value('lightgray'))
+# ).properties(
+#     width=500,height=400,title="Reporting Illness in Community over Time"
+# ).transform_filter(
+#     PAcounties
+# ).add_selection(
+#     brush
+# )
+    
+# st.write(chart)
 
 # #domain = ['Resale', 'No Resale']
 # #range_ = ['green', 'red']
