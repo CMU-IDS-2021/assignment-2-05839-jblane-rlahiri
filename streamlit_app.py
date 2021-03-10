@@ -70,9 +70,49 @@ scatter=alt.Chart(data_barvis_PA).mark_line().encode(
     tooltip=['geo_value','monthdate(time_value)','value'],
 
     color=alt.condition(picked,'geo_value',alt.value('lightgray')),
-    opacity=alt.condition(picked,alt.value(1),alt.value(0.2))
-    ).add_selection(picked).properties(width=800,height=400)
-st.write(scatter)
+    opacity=alt.condition(picked,alt.value(1),alt.value(0.05))
+    ).add_selection(picked).properties(width=800,height=400).interactive()
+
+
+
+data=fetch(4)
+
+data3_6hr = pandasql.sqldf("select * from data where geo_value like '42%'")
+
+county_data=pandasql.sqldf("select distinct geo_value from data3_6hr")
+county_details=dict()
+print(county_data.shape[0])
+l=county_data["geo_value"].tolist()
+print(str(covidcast.fips_to_name(county_data.iloc[1])))
+for i in range(county_data.shape[0]):
+    county_details.update({str(covidcast.fips_to_name(county_data.iloc[i]))[2:len(str(covidcast.fips_to_name(county_data.iloc[i])))-2]:l[i]})
+    #county_details.update({l[i]:covidcast.fips_to_name(county_data.iloc[i])})
+input_drop=alt.binding_select(options=(list(county_details.values())),name="Select County by FIPS code")
+picked=alt.selection_single(encodings=["color"],bind=input_drop) 
+
+
+bar_dataPA=data3_6hr = pandasql.sqldf("select * from data where geo_value like '42%'")
+
+scatter1=alt.Chart(bar_dataPA).mark_line(point=True).encode(
+    x=alt.X("monthdate(time_value):O"),
+    #alt.Y("geo_value:O",bin=True,axis=alt.Axis(format='%', title='percentage')),
+    #x="time_value:O",
+    y=alt.Y("value:Q",axis=alt.Axis(title='Average number of daily bar visits')),
+    tooltip=['geo_value','monthdate(time_value)','value'],
+    #alt.Color("geo_value")
+    #x="time_value:O",
+    #y="value:Q"
+    color=alt.condition(picked,'geo_value',alt.value('lightgray')),
+    opacity=alt.condition(picked,alt.value(1),alt.value(0.05))
+    
+    ).add_selection(picked).properties(width=800,height=400,title="Percentage of people spending 3-6 hours outside").interactive()
+#scatter.properties(width=800,height=600,title="Percentage of people spending 3-6 hours outside")
+st.write(scatter1+scatter)
+
+
+
+
+
 
 #--Doctor's visits
 doctorVisitsdf = pd.read_csv("doctorVisits.csv")
