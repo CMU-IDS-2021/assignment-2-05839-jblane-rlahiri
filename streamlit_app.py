@@ -72,9 +72,9 @@ scatter=alt.Chart(data_barvis_PA).mark_line().encode(
     color=alt.condition(picked,'geo_value',alt.value('lightgray')),
     opacity=alt.condition(picked,alt.value(1),alt.value(0.05))
     ).add_selection(picked).properties(width=800,height=400).interactive()
+st.write(scatter)
 
-
-
+"""
 data=fetch(4)
 
 data3_6hr = pandasql.sqldf("select * from data where geo_value like '42%'")
@@ -108,7 +108,7 @@ scatter1=alt.Chart(bar_dataPA).mark_line(point=True).encode(
     ).add_selection(picked).properties(width=800,height=400,title="Percentage of people spending 3-6 hours outside").interactive()
 #scatter.properties(width=800,height=600,title="Percentage of people spending 3-6 hours outside")
 st.write(scatter1+scatter)
-
+"""
 
 
 
