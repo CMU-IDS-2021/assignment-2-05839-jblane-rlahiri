@@ -121,7 +121,7 @@ brush = alt.selection_interval()
 chart = alt.Chart(doctorVisitsdf).mark_line().encode(
     x=alt.X('monthdate(time_value):O',axis=alt.Axis(title="Date")),
     y=alt.Y('value:Q',axis=alt.Axis(title="Indicator Value")),
-    color=alt.condition(brush, 'geo_value:N', alt.value('lightgray'))
+    color=alt.condition(brush, 'geo_value:N', alt.value('lightgray')),
     opacity=alt.condition(picked,alt.value(1),alt.value(0.05))
 ).properties(
     width=500,height=400,title="Reporting Illness in Community over Time"
