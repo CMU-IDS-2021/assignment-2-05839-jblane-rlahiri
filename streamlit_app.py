@@ -70,7 +70,7 @@ scatter=alt.Chart(data_barvis_PA).mark_line().encode(
     tooltip=['geo_value','monthdate(time_value)','value'],
 
     color=alt.condition(picked,'geo_value',alt.value('lightgray')),
-    
+    opacity=alt.condition(picked,alt.value(1),alt.value(0.2))
     ).add_selection(picked).properties(width=800,height=400)
 st.write(scatter)
 
