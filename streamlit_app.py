@@ -61,7 +61,7 @@ for i in range(county_data.shape[0]):
     county_details.update({str(covidcast.fips_to_name(county_data.iloc[i]))[2:len(str(covidcast.fips_to_name(county_data.iloc[i])))-2]:l[i]})
 
     
-input_drop=alt.binding_select(options=(list(county_details.values())),name="Select County by FIPS code")
+input_drop=alt.binding_select(options=(list(county_details.values())),name="Select County to Highlight data for Bar visits")
 picked=alt.selection_single(encodings=["color"],bind=input_drop) 
 scatter=alt.Chart(data_barvis_PA).mark_line().encode(
     x=alt.X("monthdate(time_value):O"),
@@ -70,9 +70,46 @@ scatter=alt.Chart(data_barvis_PA).mark_line().encode(
     tooltip=['geo_value','monthdate(time_value)','value'],
 
     color=alt.condition(picked,'geo_value',alt.value('lightgray')),
+    opacity=alt.condition(picked,alt.value(1),alt.value(0.05))
+    ).add_selection(picked).properties(width=800,height=400).interactive()
+
+
+
+data=fetch(4)
+
+data3_6hr = pandasql.sqldf("select * from data where geo_value like '42%'")
+
+county_data=pandasql.sqldf("select distinct geo_value from data3_6hr")
+county_details=dict()
+print(county_data.shape[0])
+l=county_data["geo_value"].tolist()
+print(str(covidcast.fips_to_name(county_data.iloc[1])))
+for i in range(county_data.shape[0]):
+    county_details.update({str(covidcast.fips_to_name(county_data.iloc[i]))[2:len(str(covidcast.fips_to_name(county_data.iloc[i])))-2]:l[i]})
+  
+input_drop=alt.binding_select(options=(list(county_details.values())),name="Select County to Highlight data for Restaurant visits")
+picked=alt.selection_single(encodings=["color"],bind=input_drop) 
+
+
+bar_dataPA=data3_6hr = pandasql.sqldf("select * from data where geo_value like '42%'")
+
+scatter1=alt.Chart(bar_dataPA).mark_line(point=True).encode(
+    x=alt.X("monthdate(time_value):O"),
     
-    ).add_selection(picked).properties(width=800,height=400)
-st.write(scatter)
+    y=alt.Y("value:Q",axis=alt.Axis(title='Average number of daily bar visits')),
+    tooltip=['geo_value','monthdate(time_value)','value'],
+    
+    color=alt.condition(picked,'geo_value',alt.value('lightgray')),
+    opacity=alt.condition(picked,alt.value(1),alt.value(0.05))
+    
+    ).add_selection(picked).properties(width=800,height=400,title="Percentage of people spending 3-6 hours outside").interactive()
+
+st.write(scatter1+scatter)
+
+
+
+
+
 
 #--Doctor's visits
 doctorVisitsdf = pd.read_csv("doctorVisits.csv")
@@ -84,7 +121,8 @@ brush = alt.selection_interval()
 chart = alt.Chart(doctorVisitsdf).mark_line().encode(
     x=alt.X('monthdate(time_value):O',axis=alt.Axis(title="Date")),
     y=alt.Y('value:Q',axis=alt.Axis(title="Indicator Value")),
-    color=alt.condition(brush, 'geo_value:N', alt.value('lightgray'))
+    color=alt.condition(brush, 'geo_value:N', alt.value('lightgray')),
+   
 ).properties(
     width=500,height=400,title="Reporting Illness in Community over Time"
 ).transform_filter(
