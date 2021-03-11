@@ -110,6 +110,7 @@ st.write(scatter1+scatter)
 
 def plot_on_PA(bar_dataPA):
     from vega_datasets import data
+    counties = alt.topo_feature(data.us_10m.url, 'counties')
     bar_dataPA=pandasql.sqldf("select * from bar_dataPA where geo_value like '42%'")
     county_data=pandasql.sqldf("select distinct geo_value from bar_dataPA")
     county_details=dict()
