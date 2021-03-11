@@ -4,3 +4,4 @@ altair
 covidcast
 pandasql
 vega_datasets
+geopy
