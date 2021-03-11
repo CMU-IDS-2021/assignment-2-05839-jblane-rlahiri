@@ -3,3 +3,4 @@ pandas
 altair
 covidcast
 pandasql
+vega_datasets
