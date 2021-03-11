@@ -86,7 +86,7 @@ def fetch(dat):
 # communityIlldf = pd.read_csv("communityIll.csv")
 # worryIlldf = pd.read_csv("worryIll.csv")
 # selfIlldf = pd.read_csv("selfIll.csv")
-#doctorVisitsdf = pd.read_csv("doctorVisits.csv")
+doctorVisitsdf = pd.read_csv("doctorVisits.csv")
 #allIndic = pd.read_csv("allIndic.csv")
 # worryIll.to_csv("worryIll.csv")
 # selfIll.to_csv("selfIll.csv")
@@ -104,7 +104,7 @@ def fetch(dat):
 #input_dropdown = alt.binding_select(options=[])
 brush = alt.selection_interval()
 
-chart = alt.Chart().mark_line().encode(
+chart = alt.Chart(doctorVisitsdf).mark_line().encode(
     x=alt.X('monthdate(time_value):O',axis=alt.Axis(title="Date")),
     y=alt.Y('value:Q',axis=alt.Axis(title="Indicator Value")),
     color=alt.condition(brush, 'geo_value:N', alt.value('lightgray'))
