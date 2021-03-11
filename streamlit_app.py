@@ -180,7 +180,7 @@ def plot_on_PA(bar_dataPA):
         opacity=alt.condition(picked,alt.value(0.5),alt.value(0)),
 
 
-        tooltip=['time_value','value']
+        tooltip=['geo_value','value']
     ).add_selection(picked).transform_filter(picked).properties(width=500,height=400)
 
     st.write(map_pennsylvania+points)
