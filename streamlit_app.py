@@ -186,9 +186,17 @@ def plot_on_PA(bar_dataPA):
     st.write(map_pennsylvania+points)
 
 st.write("Shown below is the Distribution of Restaurant Visits on the Map of Pennsylvania, Please select a Date to view the distribution on a particular Date")
-plot_on_PA(bar_dataPA)
+#plot_on_PA(bar_dataPA)
 
-
+my_button = st.radio("Please Select an Option to see the Distribution on the Pennsylvania Map", ('Show the distribution of Bar visits','Show the distribution of Restaurant visits', 'Show the distribution of people staying 3-6 hours away from home','Show the distribution of people staying greater than 6 hours away from home')) 
+if my_button=='Show the distribution of Bar visits':
+    plot_on_PA(fetch(3))
+elif my_button=='Show the distribution of Restaurant visits':
+    plot_on_PA(fetch(4))
+elif my_button=='Show the distribution of people staying 3-6 hours away from home':
+    plot_on_PA(fetch(1))
+else:
+     plot_on_PA(fetch(2))
 
 
 
