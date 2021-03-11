@@ -107,7 +107,7 @@ scatter1=alt.Chart(bar_dataPA).mark_line(point=True).encode(
 st.write(scatter1+scatter)
 
 
-
+# Call the function with the dataset to get a plot on Pennsylvania
 def plot_on_PA(bar_dataPA):
     from vega_datasets import data
     counties = alt.topo_feature(data.us_10m.url, 'counties')
@@ -169,7 +169,7 @@ def plot_on_PA(bar_dataPA):
 
     dg=pandasql.sqldf("select distinct time_value from kal")
 
-    input_drop=alt.binding_select(options=dg['time_value'].tolist(),name="Date Select")
+    input_drop=alt.binding_select(options=dg['time_value'].tolist(),name="Select Date")
     picked=alt.selection_single(encodings=["color"],bind=input_drop) 
 
     points = alt.Chart(kal).mark_circle().encode(
@@ -185,7 +185,7 @@ def plot_on_PA(bar_dataPA):
 
     st.write(map_pennsylvania+points)
 
-
+st.write("Shown below is the Distribution of Restaurant Visits on the Map of Pennsylvania, Please select a Date to view the distribution on a particular Date")
 plot_on_PA(bar_dataPA)
 
 
