@@ -4,7 +4,7 @@ import altair as alt
 from datetime import date
 import covidcast
 import pandasql
-
+from geopy.geocoders import Nominatim
 # Deliverables
 #  An interactive data science or machine learning application using Streamlit.
 #  The URL at the top of this readme needs to point to your application online. It should also list the names of the team members.
