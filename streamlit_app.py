@@ -108,6 +108,90 @@ st.write(scatter1+scatter)
 
 
 
+def plot_on_PA(bar_dataPA):
+    from vega_datasets import data
+    bar_dataPA=pandasql.sqldf("select * from bar_dataPA where geo_value like '42%'")
+    county_data=pandasql.sqldf("select distinct geo_value from bar_dataPA")
+    county_details=dict()
+
+    l=county_data["geo_value"].tolist()
+
+    for i in range(county_data.shape[0]):
+        county_details.update({str(covidcast.fips_to_name(county_data.iloc[i]))[2:len(str(covidcast.fips_to_name(county_data.iloc[i])))-2]:l[i]})
+
+    data6hrs = pandasql.sqldf("select * from bar_dataPA where geo_value like '42%'")
+
+    map_pennsylvania =(
+    alt.Chart(data = counties,
+              )
+    .mark_geoshape(
+        stroke='black',
+        strokeWidth=1,
+        fill='lightyellow'
+    )
+    .transform_calculate(state_id = "(datum.id / 1000)|0")
+    .transform_filter((alt.datum.state_id)==42)
+    .transform_lookup(
+        lookup='data6hrs',
+        from_=alt.LookupData(data6hrs,'geo_value',['value']),
+        
+         
+        ).properties(width=500,height=400)
+    )
+
+    geolocator = Nominatim(user_agent="streamlit_app.py")
+
+    lat=[]
+    lon=[]
+    coun=[]
+    @st.cache
+    def sw():
+        lsd={}
+        for i in county_details.keys():
+            sss=i+", PA"
+            y=geolocator.geocode(sss)
+            r=[y.latitude,y.longitude]
+            lat.append(y.latitude)
+            #st.write(y.latitude)
+            lon.append(y.longitude)
+            coun.append(county_details[i])
+            lsd.update({county_details[i]:r})
+        return lat,lon,coun
+
+    [lat,lon,coun]=sw()
+    det={'County':coun,'Latitude':lat,'Longitude':lon}
+
+    gb=pd.DataFrame(det)
+
+    bar_dataPA['time_value']=bar_dataPA['time_value'].str.slice(0, 10) 
+    kal=pandasql.sqldf("select bar_dataPA.geo_value,bar_dataPA.time_value,bar_dataPA.value,gb.Latitude,gb.Longitude from bar_dataPA,gb where gb.County=bar_dataPA.geo_value")
+
+    dg=pandasql.sqldf("select distinct time_value from kal")
+
+    input_drop=alt.binding_select(options=dg['time_value'].tolist(),name="Date Select")
+    picked=alt.selection_single(encodings=["color"],bind=input_drop) 
+
+    points = alt.Chart(kal).mark_circle().encode(
+        longitude='Longitude:Q',
+        latitude='Latitude:Q',
+        size='value:Q',
+        color=alt.condition(picked,'time_value',alt.value('lightgray'), legend=None),
+        opacity=alt.condition(picked,alt.value(0.5),alt.value(0)),
+
+
+        tooltip=['time_value','geo_value']
+    ).add_selection(picked).transform_filter(picked).properties(width=500,height=400)
+
+    st.write(map_pennsylvania+points)
+
+
+plot_on_PA(bar_dataPA)
+
+
+
+
+
+
 
 
 
