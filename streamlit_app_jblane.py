@@ -17,32 +17,32 @@ st.title("Public Behaviour Analysis in Covid-19 in PA (November 1, 2020 to Decem
 
 # Seems like there's some real delay in fetching 6 months of data so to build the skeletal model considered 2 months, even pre-downloading CSV isn't working well, We'll figure out someway to include 6 months later.
 
-# #PREP----Pull data from COVID just to get the csv files----
-# @st.cache
-# def fetch(dat):
+#PREP----Pull data from COVID just to get the csv files----
+@st.cache
+def fetch(dat):
 
-#     #safegraph: The number of daily visits made by those with SafeGraph’s apps to bar-related POIs in a certain region, per 100,000 population
-#     if(dat==3):
-#         data1 = covidcast.signal("safegraph", "bars_visit_prop", date(2020, 10, 1), date(2020, 12, 31), "county")
-#     #safegraph: The number of daily visits made by those with SafeGraph’s apps to restaurant-related POIs in a certain region, per 100,000 population
-#     elif(dat==4):
-#         data1 = covidcast.signal("safegraph", "restaurants_visit_prop",date(2020, 10, 1), date(2020, 12, 31), "county")
+    #safegraph: The number of daily visits made by those with SafeGraph’s apps to bar-related POIs in a certain region, per 100,000 population
+    if(dat==3):
+        data1 = covidcast.signal("safegraph", "bars_visit_prop", date(2020, 10, 1), date(2020, 12, 31), "county")
+    #safegraph: The number of daily visits made by those with SafeGraph’s apps to restaurant-related POIs in a certain region, per 100,000 population
+    elif(dat==4):
+        data1 = covidcast.signal("safegraph", "restaurants_visit_prop",date(2020, 10, 1), date(2020, 12, 31), "county")
 
-#     #fb-survey: Estimated percentage of people reporting illness in their local community, including their household, with no survey weighting
-#     elif(dat==5):    
-#         data1 = covidcast.signal("fb-survey", "smoothed_hh_cmnty_cli", date(2020, 10, 1), date(2020, 12, 31), "county")
+    #fb-survey: Estimated percentage of people reporting illness in their local community, including their household, with no survey weighting
+    elif(dat==5):    
+        data1 = covidcast.signal("fb-survey", "smoothed_hh_cmnty_cli", date(2020, 10, 1), date(2020, 12, 31), "county")
     
-#     else:#(dat == 6)
-#     #fb-survey: Estimated percentage of respondents who reported feeling very or somewhat worried that “you or someone in your immediate family might become seriously ill from COVID-19”
-#         data1 = covidcast.signal("fb-survey", "smoothed_worried_become_ill", date(2020, 10, 1), date(2020, 12, 31), "county")
-#     return data1
+    else:#(dat == 6)
+    #fb-survey: Estimated percentage of respondents who reported feeling very or somewhat worried that “you or someone in your immediate family might become seriously ill from COVID-19”
+        data1 = covidcast.signal("fb-survey", "smoothed_worried_become_ill", date(2020, 10, 1), date(2020, 12, 31), "county")
+    return data1
 
 # #PREP #--Pull data-----Used in csv file process
 
-# barData = fetch(3)
-# restaurantData = fetch(4)
-# commWorry = fetch(5)
-# selfWorry = fetch(6)
+barData = fetch(3)
+restaurantData = fetch(4)
+commWorry = fetch(5)
+selfWorry = fetch(6)
 
 # #PREP--Convert to csv----Used in csv file process
 
@@ -65,6 +65,7 @@ barDatadf = createCsvDf("barData.csv")
 restaurantDatadf = createCsvDf("restaurantData.csv")
 commWorrydf = createCsvDf("commWorry.csv")
 selfWorrydf = createCsvDf("selfWorry.csv")
+countyList = set(list(barDatadf['name'])+list(restaurantDatadf['name'])+list(commWorrydf['name'])+list(selfWorrydf['name']))
 
 #---Show Raw Data data table
 
@@ -80,105 +81,199 @@ if st.checkbox("Show me the raw data worry about illness in community"):
 #SelfWorry Data
 if st.checkbox("Show me the raw data becoming ill"):
     st.write(selfWorrydf)
-    
-#---Select Zip Code---
+# if st.checkbox("Show me the list of counties"):
+#     st.write(countyList)
 
 
-#---Create Map------------
 
-# Call the function with the dataset to get a plot on Pennsylvania
-def plot_on_PA(bar_dataPA):
-    from vega_datasets import data
-    counties = alt.topo_feature(data.us_10m.url, 'counties')
-    bar_dataPA=pandasql.sqldf("select * from bar_dataPA where geo_value like '42%'")
-    county_data=pandasql.sqldf("select distinct geo_value from bar_dataPA")
-    county_details=dict()
+# #---create map-----
+# def plot_on_PA(bar_dataPA):
+#     from vega_datasets import data
+#     counties = alt.topo_feature(data.us_10m.url, 'counties')
+#     bar_dataPA=pandasql.sqldf("select * from bar_dataPA where geo_value like '42%'")
+#     county_data=pandasql.sqldf("select distinct geo_value from bar_dataPA")
+#     county_details=dict()
 
-    l=county_data["geo_value"].tolist()
+#     l=county_data["geo_value"].tolist()
 
-    for i in range(county_data.shape[0]):
-        county_details.update({str(covidcast.fips_to_name(county_data.iloc[i]))[2:len(str(covidcast.fips_to_name(county_data.iloc[i])))-2]:l[i]})
+#     for i in range(county_data.shape[0]):
+#         county_details.update({str(covidcast.fips_to_name(county_data.iloc[i]))[2:len(str(covidcast.fips_to_name(county_data.iloc[i])))-2]:l[i]})
 
-    data6hrs = pandasql.sqldf("select * from bar_dataPA where geo_value like '42%'")
+#     data6hrs = pandasql.sqldf("select * from bar_dataPA where geo_value like '42%'")
 
-    map_pennsylvania =(
-    alt.Chart(data = counties,
-              )
-    .mark_geoshape(
-        stroke='black',
-        strokeWidth=1,
-        fill='lightyellow'
-    )
-    .transform_calculate(state_id = "(datum.id / 1000)|0")
-    .transform_filter((alt.datum.state_id)==42)
-    .transform_lookup(
-        lookup='data6hrs',
-        from_=alt.LookupData(data6hrs,'geo_value',['value']),
+#     map_pennsylvania =(
+#     alt.Chart(data = counties,
+#               )
+#     .mark_geoshape(
+#         stroke='black',
+#         strokeWidth=1,
+#         fill='lightyellow'
+#     )
+#     .transform_calculate(state_id = "(datum.id / 1000)|0")
+#     .transform_filter((alt.datum.state_id)==42)
+#     .transform_lookup(
+#         lookup='data6hrs',
+#         from_=alt.LookupData(data6hrs,'geo_value',['value']),
         
          
-        ).properties(width=500,height=400)
-    )
+#         ).properties(width=500,height=400)
+#     )
 
-    geolocator = Nominatim(user_agent="streamlit_app.py")
+#     geolocator = Nominatim(user_agent="streamlit_app.py")
 
-    lat=[]
-    lon=[]
-    coun=[]
-    @st.cache
-    def sw():
-        lsd={}
-        for i in county_details.keys():
-            sss=i+", PA"
-            y=geolocator.geocode(sss)
-            r=[y.latitude,y.longitude]
-            lat.append(y.latitude)
-            #st.write(y.latitude)
-            lon.append(y.longitude)
-            coun.append(county_details[i])
-            lsd.update({county_details[i]:r})
-        return lat,lon,coun
+#     lat=[]
+#     lon=[]
+#     coun=[]
+#     @st.cache
+#     def sw():
+#         lsd={}
+#         for i in county_details.keys():
+#             sss=i+", PA"
+#             y=geolocator.geocode(sss)
+#             r=[y.latitude,y.longitude]
+#             lat.append(y.latitude)
+#             #st.write(y.latitude)
+#             lon.append(y.longitude)
+#             coun.append(county_details[i])
+#             lsd.update({county_details[i]:r})
+#         return lat,lon,coun
 
-    [lat,lon,coun]=sw()
-    det={'County':coun,'Latitude':lat,'Longitude':lon}
+#     [lat,lon,coun]=sw()
+#     det={'County':coun,'Latitude':lat,'Longitude':lon}
 
-    gb=pd.DataFrame(det)
+#     gb=pd.DataFrame(det)
 
-    bar_dataPA['time_value']=bar_dataPA['time_value'].str.slice(0, 10) 
-    kal=pandasql.sqldf("select bar_dataPA.geo_value,bar_dataPA.time_value,bar_dataPA.value,gb.Latitude,gb.Longitude from bar_dataPA,gb where gb.County=bar_dataPA.geo_value")
+#     bar_dataPA['time_value']=bar_dataPA['time_value'].str.slice(0, 10) 
+#     kal=pandasql.sqldf("select bar_dataPA.geo_value,bar_dataPA.time_value,bar_dataPA.value,gb.Latitude,gb.Longitude from bar_dataPA,gb where gb.County=bar_dataPA.geo_value")
 
-    dg=pandasql.sqldf("select distinct time_value from kal")
+#     dg=pandasql.sqldf("select distinct time_value from kal")
 
-    input_drop=alt.binding_select(options=dg['time_value'].tolist(),name="Select Date")
-    picked=alt.selection_single(encodings=["color"],bind=input_drop) 
+#     input_drop=alt.binding_select(options=dg['time_value'].tolist(),name="Select Date")
+#     picked=alt.selection_single(encodings=["color"],bind=input_drop) 
 
-    points = alt.Chart(kal).mark_circle().encode(
-        longitude='Longitude:Q',
-        latitude='Latitude:Q',
-        size='value:Q',
-        color=alt.condition(picked,'time_value',alt.value('lightgray'), legend=None),
-        opacity=alt.condition(picked,alt.value(0.5),alt.value(0)),
-
-
-        tooltip=['geo_value','value']
-    ).add_selection(picked).transform_filter(picked).properties(width=500,height=400)
-
-    st.write(map_pennsylvania+points)
-
-st.write("Shown below is the Distribution of Restaurant Visits on the Map of Pennsylvania, Please select a Date to view the distribution on a particular Date")
-#plot_on_PA(bar_dataPA)
-
-my_button = st.radio("Please Select an Option to see the Distribution on the Pennsylvania Map", ('Show the distribution of Bar visits','Show the distribution of Restaurant visits', 'Show the distribution of people who know someone in their community with COVID-like symptoms','Show the distribution of people who are worried that they or their immediatel family would become ill')) 
-if my_button=='Show the distribution of Bar visits':
-    plot_on_PA(barDatadf)
-elif my_button=='Show the distribution of Restaurant visits':
-    plot_on_PA(restaurantDatadf)
-elif my_button=='Show the distribution of people who know someone in their community with COVID-like symptoms':
-    plot_on_PA(commWorrydf)
-else: #'Show the distribution of people who are worried that they or their immediatel family would become ill'
-     plot_on_PA(selfWorrydf)
+#     points = alt.Chart(kal).mark_circle().encode(
+#         longitude='Longitude:Q',
+#         latitude='Latitude:Q',
+#         size='value:Q',
+#         color=alt.condition(picked,'time_value',alt.value('lightgray'), legend=None),
+#         opacity=alt.condition(picked,alt.value(0.5),alt.value(0)),
 
 
+#         tooltip=['geo_value','value']
+#     ).add_selection(picked).transform_filter(picked).properties(width=500,height=400)
 
+#     st.write(map_pennsylvania+points)
+
+# st.write("Shown below is the Distribution of Restaurant Visits on the Map of Pennsylvania, Please select a Date to view the distribution on a particular Date")
+# #plot_on_PA(bar_dataPA)
+
+# my_button = st.radio("Please Select an Option to see the Distribution on the Pennsylvania Map", ('Show the distribution of Bar visits','Show the distribution of Restaurant visits', 'Show the distribution of people staying 3-6 hours away from home','Show the distribution of people staying greater than 6 hours away from home')) 
+# if my_button=='Show the distribution of Bar visits':
+#     plot_on_PA(barData)
+# elif my_button=='Show the distribution of Restaurant visits':
+#     plot_on_PA(restaurantData)
+# elif my_button=='Show the distribution of people staying 3-6 hours away from home':
+#     plot_on_PA(commWorry)
+# else:
+#     plot_on_PA(selfWorry)
+
+
+
+
+
+
+#---Select County Dropdown--
+county_dropdown = alt.binding_select(options=list(countyList))
+selectedCounty = alt.selection_single(fields=['name'],bind=county_dropdown, name='PA County:')
+
+#---brush select area to focus on
+brush = alt.selection (type='interval')
+
+#---slider select for date
+
+
+#---commWorry chart
+commWorryChart = alt.Chart(commWorrydf).mark_line(point = True).encode(
+    alt.X("monthdate(time_value):O",axis=alt.Axis(title='Date')),
+    alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
+    tooltip=[alt.Tooltip('geo_value',title = 'FIPS'),alt.Tooltip('monthdate(time_value)',title = 'date'), alt.Tooltip('value',title='Value')],
+    color=alt.condition(brush, 'Cylinders:O', alt.value('grey')),
+    #opacity=alt.condition(selectedCounty,alt.value(1),alt.value(0.05))
+    
+    ).add_selection(
+        selectedCounty,
+        brush
+    ).transform_filter(
+        selectedCounty
+    ).properties(width=400,height=200,title="Percent of People who know someone with COVID-like symptoms")
+
+# st.write(commWorryChart)
+
+#--selfWorry chart
+
+selfWorryChart = alt.Chart(selfWorrydf).mark_line(point = True).encode(
+    alt.X("monthdate(time_value):O",axis=alt.Axis(title='Date')),
+    alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
+    tooltip=[alt.Tooltip('geo_value',title = 'FIPS'),alt.Tooltip('monthdate(time_value)',title = 'date'), alt.Tooltip('value',title='Value')],
+    color=alt.condition(brush, 'Cylinders:O', alt.value('grey')),
+    #opacity=alt.condition(selectedCounty,alt.value(1),alt.value(0.05))
+    
+    ).add_selection(
+        selectedCounty,
+        brush
+    ).transform_filter(
+        selectedCounty
+    ).properties(width=400,height=200,title="Percent of People who are afraid they or someone they know will become seriously ill from COVID-19 ")
+
+# st.write(selfWorryChart)
+
+#--barData chart
+barDataChart = alt.Chart(barDatadf).mark_line(point = True).encode(
+    alt.X("monthdate(time_value):O",axis=alt.Axis(title='Date')),
+    alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
+    tooltip=[alt.Tooltip('geo_value',title = 'FIPS'),alt.Tooltip('monthdate(time_value)',title = 'date'), alt.Tooltip('value',title='Value')],
+    color=alt.condition(brush, 'Cylinders:O', alt.value('grey')),
+    #opacity=alt.condition(selectedCounty,alt.value(1),alt.value(0.05))
+    
+    ).add_selection(
+        selectedCounty,
+        brush
+    ).transform_filter(
+        selectedCounty
+    ).properties(width=400,height=200,title="Percent of People who know someone with COVID-like symptoms")
+
+# st.write(barDataChart)
+
+#--restaurant data chart
+restaurantDataChart = alt.Chart(restaurantDatadf).mark_line(point = True).encode(
+    alt.X("monthdate(time_value):O",axis=alt.Axis(title='Date')),
+    alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
+    tooltip=[alt.Tooltip('geo_value',title = 'FIPS'),alt.Tooltip('monthdate(time_value)',title = 'date'), alt.Tooltip('value',title='Value')],
+    color=alt.condition(brush, 'Cylinders:O', alt.value('grey')),
+    #opacity=alt.condition(selectedCounty,alt.value(1),alt.value(0.05))
+    
+    ).add_selection(
+        selectedCounty,
+        brush
+    ).transform_filter(
+        selectedCounty
+    ).properties(width=400,height=200,title="Percent of People who know someone with COVID-like symptoms")
+
+# st.write(restaurantDataChart)
+
+
+#--combine all the charts together
+# emotional = alt.layer(barDataChart, restaurantDataChart).resolve_scale(
+#     y='independent')
+# st.write(emotional)
+
+#vCombine = alt.vconcat(commWorryChart,selfWorryChart,barDataChart,restaurantDataChart)
+#st.write(vCombine)
+#st.write(commWorryChart|selfWorryChart|barDataChart|restaurantDataChart)
+st.write(commWorryChart+selfWorryChart)
+
+    
+    
 
 
 
