@@ -18,14 +18,9 @@ st.title("Public Behaviour Analysis in Covid-19 from 1st October 2020 to 1st Mar
 
 @st.cache
 def fetch(dat):
-    if(dat==1):
-    # safegraph: The fraction of devices that spent between 3 and 6 hours at a location other than their home during the daytime
-        data1 = covidcast.signal("safegraph", "part_time_work_prop", date(2020, 10, 1), date(2020, 12, 1), "county")
-    #safegraph: The fraction of mobile devices that spent more than 6 hours at a location other than their home during the daytime
-    elif(dat==2):
-        data1 = covidcast.signal("safegraph", "full_time_work_prop", date(2020, 10, 1), date(2020, 12, 1), "county")
+
     #safegraph: The number of daily visits made by those with SafeGraph’s apps to bar-related POIs in a certain region, per 100,000 population
-    elif(dat==3):
+    if(dat==3):
         data1 = covidcast.signal("safegraph", "bars_visit_prop", date(2020, 10, 1), date(2020, 12, 1), "county")
     #safegraph: The number of daily visits made by those with SafeGraph’s apps to restaurant-related POIs in a certain region, per 100,000 population
     elif(dat==4):
@@ -35,19 +30,39 @@ def fetch(dat):
     elif(dat==5):    
         data1 = covidcast.signal("fb-survey", "smoothed_hh_cmnty_cli", date(2020, 10, 1), date(2020, 12, 1), "county")
     
+    else:#(dat == 6)
     #fb-survey: Estimated percentage of respondents who reported feeling very or somewhat worried that “you or someone in your immediate family might become seriously ill from COVID-19”
-    elif(dat==6):
         data1 = covidcast.signal("fb-survey", "smoothed_worried_become_ill", date(2020, 10, 1), date(2020, 12, 1), "county")
-    
-    #fb-survey: Estimated percentage of people with COVID-like illness, with no survey weighting
-    elif(dat==7):
-        data1 = covidcast.signal("fb-survey", "smoothed_cli",date(2020, 10, 1), date(2020, 12, 1), "county")
-    
-    else:
-        data1= covidcast.signal("doctor-visits", "smoothed_cli",date(2020, 10, 1), date(2020, 12, 1), "county")
     return data1
 
+#--Pull data-----
 
+barData = fetch(3)
+restaurantData = fetch(4)
+commWorry = fetch(5)
+selfWorry = fetch(6)
+
+#--Convert to csv----
+
+barData.to_csv("barData.csv")
+restaurantData.to_csv("restaurantData.csv")
+commWorry.to_csv("commWorry.csv")
+selfWorry.to_csv("selfWorry.csv")
+
+#---Map------------
+
+
+
+
+
+
+
+
+
+
+
+
+#----------------------------------------------------
 # data=fetch(3)
 # data_barvis_PA = pandasql.sqldf("select * from data where geo_value like '42%'")
 # if st.checkbox("Display raw data"):
@@ -86,7 +101,7 @@ def fetch(dat):
 # communityIlldf = pd.read_csv("communityIll.csv")
 # worryIlldf = pd.read_csv("worryIll.csv")
 # selfIlldf = pd.read_csv("selfIll.csv")
-doctorVisitsdf = pd.read_csv("doctorVisits.csv")
+# doctorVisitsdf = pd.read_csv("doctorVisits.csv")
 #allIndic = pd.read_csv("allIndic.csv")
 # worryIll.to_csv("worryIll.csv")
 # selfIll.to_csv("selfIll.csv")
@@ -102,20 +117,21 @@ doctorVisitsdf = pd.read_csv("doctorVisits.csv")
 
 #---all data
 #input_dropdown = alt.binding_select(options=[])
-brush = alt.selection_interval()
+# brush = alt.selection_interval()
 
-chart = alt.Chart(doctorVisitsdf).mark_line().encode(
-    x=alt.X('monthdate(time_value):O',axis=alt.Axis(title="Date")),
-    y=alt.Y('value:Q',axis=alt.Axis(title="Indicator Value")),
-    color=alt.condition(brush, 'geo_value:N', alt.value('lightgray'))
-).properties(width=500,height=400,title="Reporting Illness in Community over Time"
-).transform_filter(
-    alt.FieldRangePredicate(field='geo_value',range=[42000,43000])
-).add_selection(
-    brush
-)
-    
-st.write(chart)
+# chart1 = alt.Chart(doctorVisitsdf).mark_line().encode(
+#     x=alt.X('monthdate(time_value):O',axis=alt.Axis(title="Date")),
+#     y=alt.Y('value:Q',axis=alt.Axis(title="Indicator Value")),
+#     color=alt.condition(brush, 'geo_value:N', alt.value('lightgray'))
+# ).properties(width=500,height=400,title="Reporting Illness in Community over Time"
+# ).transform_filter(
+#     alt.FieldRangePredicate(field='geo_value',range=[42000,43000])
+# ).add_selection(
+#     brush
+# )
+
+# final = alt.layer(chart1, chart2, chart3, chart4)    
+# st.write(chart)
 
 #--Doctor's visits
 # #PAcountiesdf = (doctorVisitsdf['geo_value'] >= 42000) & (doctorVisitsdf['geo_value' < 43000])
