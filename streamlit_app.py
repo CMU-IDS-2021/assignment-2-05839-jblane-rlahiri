@@ -108,7 +108,7 @@ def plot_on_PA(bar_dataPA):
         from_=alt.LookupData(data6hrs,'geo_value',['value']),
         
          
-        ).properties(width=500,height=400)
+        ).properties(width=700,height=400)
     )
 
     geolocator = Nominatim(user_agent="streamlit_app.py")
@@ -152,7 +152,7 @@ def plot_on_PA(bar_dataPA):
 
 
         tooltip=['geo_value','value']
-    ).add_selection(picked).transform_filter(picked).properties(width=500,height=400)
+    ).add_selection(picked).transform_filter(picked).properties(width=700,height=400)
 
     st.write(map_pennsylvania+points)
     
