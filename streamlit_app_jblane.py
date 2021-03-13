@@ -8,6 +8,8 @@ from geopy.geocoders import Nominatim
 
 
 st.title("Public Behaviour Analysis in Covid-19 in PA (November 1, 2020 to December 31, 2020)📊")
+# streamlit run streamlit_app_jblane.py
+
 
 #PREP----Pull data from COVID just to get the csv files----
 @st.cache
@@ -63,6 +65,11 @@ countyList = set(list(barDatadf['name'])+list(restaurantDatadf['name'])+list(com
 # countyList = countyList.sort()
 
 
+#Make clean csv's with fips, county names, and just PA
+barDatadf.to_csv("barData2.csv")
+restaurantDatadf.to_csv("restaurantData2.csv")
+commWorrydf.to_csv("commWorry2.csv")
+selfWorrydf.to_csv("selfWorry2.csv")
 
 
 # #---create map-----
