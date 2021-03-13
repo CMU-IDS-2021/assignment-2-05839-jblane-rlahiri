@@ -6,16 +6,8 @@ import covidcast
 import pandasql
 from geopy.geocoders import Nominatim
 
-# Deliverables
-#  An interactive data science or machine learning application using Streamlit.
-#  The URL at the top of this readme needs to point to your application online. It should also list the names of the team members.
-#  A write-up that describes the goals of your application, justifies design decisions, and gives an overview of your development process. Use the writeup.md file in this repository. You may add more sections to the document than the template has right now.
 
-
-#st.title("Let's analyze some Penguin Data 🐧📊.") #how did he get this emoji on here?!
 st.title("Public Behaviour Analysis in Covid-19 in PA (November 1, 2020 to December 31, 2020)📊")
-
-# Seems like there's some real delay in fetching 6 months of data so to build the skeletal model considered 2 months, even pre-downloading CSV isn't working well, We'll figure out someway to include 6 months later.
 
 #PREP----Pull data from COVID just to get the csv files----
 @st.cache
@@ -61,11 +53,12 @@ def createCsvDf(valueCSVfile): #given filename for metric csv file
     finalDf.drop(finalDf[finalDf['state'] != 'PA'].index, inplace = True) #keep PA counties
     return finalDf
 
+#---define variables
+
 barDatadf = createCsvDf("barData.csv")
 restaurantDatadf = createCsvDf("restaurantData.csv")
 commWorrydf = createCsvDf("commWorry.csv")
 selfWorrydf = createCsvDf("selfWorry.csv")
-
 countyList = set(list(barDatadf['name'])+list(restaurantDatadf['name'])+list(commWorrydf['name'])+list(selfWorrydf['name']))
 # countyList = countyList.sort()
 

@@ -5,15 +5,25 @@ from datetime import date
 import covidcast
 import pandasql
 from geopy.geocoders import Nominatim
+# Deliverables
+#  An interactive data science or machine learning application using Streamlit.
+#  The URL at the top of this readme needs to point to your application online. It should also list the names of the team members.
+#  A write-up that describes the goals of your application, justifies design decisions, and gives an overview of your development process. Use the writeup.md file in this repository. You may add more sections to the document than the template has right now.
 
-st.title("Public Behaviour Analysis in Covid-19 in PA (November 1, 2020 to December 31, 2020)📊")
 
-#PREP----Pull data from COVID just to get the csv files----
+#st.title("Let's analyze some Penguin Data 🐧📊.") #how did he get this emoji on here?!
+st.title("Public Behaviour Analysis in Covid-19 from 1st October 2020 to 31st December 2020 for PA 📊")
+
 @st.cache
 def fetch(dat):
-
+    if(dat==1):
+    # safegraph: The fraction of devices that spent between 3 and 6 hours at a location other than their home during the daytime
+        data1 = covidcast.signal("safegraph", "part_time_work_prop", date(2020, 10, 1), date(2020, 12, 31), "county")
+    #safegraph: The fraction of mobile devices that spent more than 6 hours at a location other than their home during the daytime
+    elif(dat==2):
+        data1 = covidcast.signal("safegraph", "full_time_work_prop", date(2020, 10, 1), date(2020, 12, 31), "county")
     #safegraph: The number of daily visits made by those with SafeGraph’s apps to bar-related POIs in a certain region, per 100,000 population
-    if(dat==3):
+    elif(dat==3):
         data1 = covidcast.signal("safegraph", "bars_visit_prop", date(2020, 10, 1), date(2020, 12, 31), "county")
     #safegraph: The number of daily visits made by those with SafeGraph’s apps to restaurant-related POIs in a certain region, per 100,000 population
     elif(dat==4):
@@ -23,111 +33,77 @@ def fetch(dat):
     elif(dat==5):    
         data1 = covidcast.signal("fb-survey", "smoothed_hh_cmnty_cli", date(2020, 10, 1), date(2020, 12, 31), "county")
     
-    else:#(dat == 6)
     #fb-survey: Estimated percentage of respondents who reported feeling very or somewhat worried that “you or someone in your immediate family might become seriously ill from COVID-19”
+    elif(dat==6):
         data1 = covidcast.signal("fb-survey", "smoothed_worried_become_ill", date(2020, 10, 1), date(2020, 12, 31), "county")
+    
+    #fb-survey: Estimated percentage of people with COVID-like illness, with no survey weighting
+    elif(dat==7):
+        data1 = covidcast.signal("fb-survey", "smoothed_cli",date(2020, 10, 1), date(2020, 12, 31), "county")
+    
+    else:
+        data1= covidcast.signal("doctor-visits", "smoothed_cli",date(2020, 10, 1), date(2020, 12, 31), "county")
     return data1
 
-# #PREP #--Pull data-----Used in csv file process
-
-barData = fetch(3)
-restaurantData = fetch(4)
-commWorry = fetch(5)
-selfWorry = fetch(6)
-
-# #PREP--Convert to csv----Used in csv file process
-
-# barData.to_csv("barData.csv")
-# restaurantData.to_csv("restaurantData.csv")
-# commWorry.to_csv("commWorry.csv")
-# selfWorry.to_csv("selfWorry.csv")
-
-#--create df from csv files, keep desired columns, combine counties with FIPS-- This is different from pulling it off the covidcast server
-@st.cache
-def createCsvDf(valueCSVfile): #given filename for metric csv file
-    fipsData = pd.read_csv("Fips_countyname.csv") #list of county names and fips to dataframe (cite: https://github.com/kjhealy/fips-codes)
-    finalDf = pd.read_csv(valueCSVfile) #metric csv file to dataframe
-    finalDf = finalDf[['geo_value','time_value','value']] #keep desired columns
-    finalDf = pd.merge(finalDf,fipsData, on = "geo_value",how="left") #add county names to fips, left join tables
-    finalDf.drop(finalDf[finalDf['state'] != 'PA'].index, inplace = True) #keep PA counties
-    return finalDf
-
-#---define variables
-
-barDatadf = createCsvDf("barData.csv")
-restaurantDatadf = createCsvDf("restaurantData.csv")
-commWorrydf = createCsvDf("commWorry.csv")
-selfWorrydf = createCsvDf("selfWorry.csv")
-countyList = set(list(barDatadf['name'])+list(restaurantDatadf['name'])+list(commWorrydf['name'])+list(selfWorrydf['name']))
-# countyList = countyList.sort()
-
-
-
-
-
-
-
-
-
-#-----------------------------------------------------------------------  
-# data=fetch(3)
-# data_barvis_PA = pandasql.sqldf("select * from data where geo_value like '42%'")
-# if st.checkbox("Display raw data"):
-#     st.write(data_barvis_PA)
-    
-# county_data=pandasql.sqldf("select distinct geo_value from data_barvis_PA")
-# county_details=dict()
-# print(county_data.shape[0])
-# l=county_data["geo_value"].tolist()
-# print(str(covidcast.fips_to_name(county_data.iloc[1])))
-# for i in range(county_data.shape[0]):
-#     county_details.update({str(covidcast.fips_to_name(county_data.iloc[i]))[2:len(str(covidcast.fips_to_name(county_data.iloc[i])))-2]:l[i]})
-
-    
-# input_drop=alt.binding_select(options=(list(county_details.values())),name="Select County to Highlight data for Bar visits")
-# picked=alt.selection_single(encodings=["color"],bind=input_drop) 
-# scatter=alt.Chart(data_barvis_PA).mark_line().encode(
-#     x=alt.X("monthdate(time_value):O"),
-
-#     y=alt.Y("value:Q",axis=alt.Axis(title='Average number of daily bar visits')),
-#     tooltip=['geo_value','monthdate(time_value)','value'],
-
-#     color=alt.condition(picked,'geo_value',alt.value('lightgray')),
-#     opacity=alt.condition(picked,alt.value(1),alt.value(0.05))
-#     ).add_selection(picked).properties(width=800,height=400).interactive()
-
-
-
-# data=fetch(4)
-
-# data3_6hr = pandasql.sqldf("select * from data where geo_value like '42%'")
-
-# county_data=pandasql.sqldf("select distinct geo_value from data3_6hr")
-# county_details=dict()
-# print(county_data.shape[0])
-# l=county_data["geo_value"].tolist()
-# print(str(covidcast.fips_to_name(county_data.iloc[1])))
-# for i in range(county_data.shape[0]):
-#     county_details.update({str(covidcast.fips_to_name(county_data.iloc[i]))[2:len(str(covidcast.fips_to_name(county_data.iloc[i])))-2]:l[i]})
   
-# input_drop=alt.binding_select(options=(list(county_details.values())),name="Select County to Highlight data for Restaurant visits")
-# picked=alt.selection_single(encodings=["color"],bind=input_drop) 
-
-
-# bar_dataPA=data3_6hr = pandasql.sqldf("select * from data where geo_value like '42%'")
-
-# scatter1=alt.Chart(bar_dataPA).mark_line(point=True).encode(
-#     x=alt.X("monthdate(time_value):O"),
+data=fetch(3)
+data_barvis_PA = pandasql.sqldf("select * from data where geo_value like '42%'")
+if st.checkbox("Display raw data"):
+    st.write(data_barvis_PA)
     
-#     y=alt.Y("value:Q",axis=alt.Axis(title='Average number of daily bar visits')),
-#     tooltip=['geo_value','monthdate(time_value)','value'],
-    
-#     color=alt.condition(picked,'geo_value',alt.value('lightgray')),
-#     opacity=alt.condition(picked,alt.value(1),alt.value(0.05))
-    
-#     ).add_selection(picked).properties(width=800,height=400,title="Percentage of people spending 3-6 hours outside").interactive()
+county_data=pandasql.sqldf("select distinct geo_value from data_barvis_PA")
+county_details=dict()
+print(county_data.shape[0])
+l=county_data["geo_value"].tolist()
+print(str(covidcast.fips_to_name(county_data.iloc[1])))
+for i in range(county_data.shape[0]):
+    county_details.update({str(covidcast.fips_to_name(county_data.iloc[i]))[2:len(str(covidcast.fips_to_name(county_data.iloc[i])))-2]:l[i]})
 
-# st.write(scatter1+scatter)
+    
+input_drop=alt.binding_select(options=(list(county_details.values())),name="Select County to Highlight data for Bar visits")
+picked=alt.selection_single(encodings=["color"],bind=input_drop) 
+scatter=alt.Chart(data_barvis_PA).mark_line().encode(
+    x=alt.X("monthdate(time_value):O"),
+
+    y=alt.Y("value:Q",axis=alt.Axis(title='Average number of daily bar visits')),
+    tooltip=['geo_value','monthdate(time_value)','value'],
+
+    color=alt.condition(picked,'geo_value',alt.value('lightgray')),
+    opacity=alt.condition(picked,alt.value(1),alt.value(0.05))
+    ).add_selection(picked).properties(width=800,height=400).interactive()
+
+
+
+data=fetch(4)
+
+data3_6hr = pandasql.sqldf("select * from data where geo_value like '42%'")
+
+county_data=pandasql.sqldf("select distinct geo_value from data3_6hr")
+county_details=dict()
+print(county_data.shape[0])
+l=county_data["geo_value"].tolist()
+print(str(covidcast.fips_to_name(county_data.iloc[1])))
+for i in range(county_data.shape[0]):
+    county_details.update({str(covidcast.fips_to_name(county_data.iloc[i]))[2:len(str(covidcast.fips_to_name(county_data.iloc[i])))-2]:l[i]})
+  
+input_drop=alt.binding_select(options=(list(county_details.values())),name="Select County to Highlight data for Restaurant visits")
+picked=alt.selection_single(encodings=["color"],bind=input_drop) 
+
+
+bar_dataPA=data3_6hr = pandasql.sqldf("select * from data where geo_value like '42%'")
+
+scatter1=alt.Chart(bar_dataPA).mark_line(point=True).encode(
+    x=alt.X("monthdate(time_value):O"),
+    
+    y=alt.Y("value:Q",axis=alt.Axis(title='Average number of daily bar visits')),
+    tooltip=['geo_value','monthdate(time_value)','value'],
+    
+    color=alt.condition(picked,'geo_value',alt.value('lightgray')),
+    opacity=alt.condition(picked,alt.value(1),alt.value(0.05))
+    
+    ).add_selection(picked).properties(width=800,height=400,title="Percentage of people spending 3-6 hours outside").interactive()
+
+st.write(scatter1+scatter)
 
 
 # Call the function with the dataset to get a plot on Pennsylvania
