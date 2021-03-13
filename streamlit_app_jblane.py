@@ -33,10 +33,10 @@ def fetch(dat):
 
 # #PREP #--Pull data-----Used in csv file process
 
-barData = fetch(3)
-restaurantData = fetch(4)
-commWorry = fetch(5)
-selfWorry = fetch(6)
+#barData = fetch(3)
+#restaurantData = fetch(4)
+#commWorry = fetch(5)
+#selfWorry = fetch(6)
 
 # #PREP--Convert to csv----Used in csv file process
 
@@ -46,7 +46,6 @@ selfWorry = fetch(6)
 # selfWorry.to_csv("selfWorry.csv")
 
 #--create df from csv files, keep desired columns, combine counties with FIPS-- This is different from pulling it off the covidcast server
-@st.cache
 def createCsvDf(valueCSVfile): #given filename for metric csv file
     fipsData = pd.read_csv("Fips_countyname.csv") #list of county names and fips to dataframe (cite: https://github.com/kjhealy/fips-codes)
     finalDf = pd.read_csv(valueCSVfile) #metric csv file to dataframe
@@ -61,15 +60,18 @@ barDatadf = createCsvDf("barData.csv")
 restaurantDatadf = createCsvDf("restaurantData.csv")
 commWorrydf = createCsvDf("commWorry.csv")
 selfWorrydf = createCsvDf("selfWorry.csv")
-countyList = set(list(barDatadf['name'])+list(restaurantDatadf['name'])+list(commWorrydf['name'])+list(selfWorrydf['name']))
-# countyList = countyList.sort()
+allDatadf = pd.read_csv("combinedData.csv")
+countyList = list(set(list(barDatadf['name'])+list(restaurantDatadf['name'])+list(commWorrydf['name'])+list(selfWorrydf['name'])))
+countyList.sort()
+#countyList = list(set(allDatadf['name']))
+#countyList.sort()
 
 
 #Make clean csv's with fips, county names, and just PA
-barDatadf.to_csv("barData2.csv")
-restaurantDatadf.to_csv("restaurantData2.csv")
-commWorrydf.to_csv("commWorry2.csv")
-selfWorrydf.to_csv("selfWorry2.csv")
+#barDatadf.to_csv("barData2.csv")
+#restaurantDatadf.to_csv("restaurantData2.csv")
+#commWorrydf.to_csv("commWorry2.csv")
+#selfWorrydf.to_csv("selfWorry2.csv")
 
 
 # #---create map-----
@@ -169,7 +171,7 @@ selfWorrydf.to_csv("selfWorry2.csv")
 
 
 #---Select County Dropdown--
-county_dropdown = alt.binding_select(options=list(set(countyList)))
+county_dropdown = alt.binding_select(options=list(countyList))
 selectedCounty = alt.selection_single(fields=['name'],bind=county_dropdown, name='PA County:')
 
 #---brush select area to focus on
@@ -178,7 +180,7 @@ brush = alt.selection(type = 'interval',encodings=['x'])
 #---slider select for date
 
 
-#---commWorry chart
+##---commWorry chart
 commWorryChart = alt.Chart(commWorrydf).mark_area(color='red').encode(
     alt.X("monthdate(time_value):T",axis=alt.Axis(title='Date')),
     alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
@@ -247,6 +249,21 @@ restaurantDataChart = alt.Chart(restaurantDatadf).mark_line( color = 'blue').enc
 
 # st.write(restaurantDataChart)
 
+#allDataChart = alt.Chart(allDatadf).mark_line().encode(
+#    alt.X("monthdate(time_value):T",axis=alt.Axis(title='Date'),scale=alt.Scale(domain=brush)),
+#    alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
+#    tooltip=[alt.Tooltip('geo_value',title = 'FIPS'),alt.Tooltip('monthdate(time_value)',title = 'date'), alt.Tooltip('value',title='Value')],
+#    # color=alt.condition(brush, 'Cylinders:O', alt.value('lightgray')),
+#    #opacity=alt.condition(selectedCounty,alt.value(1),alt.value(0.05))
+#    
+#    # ).add_selection(
+#    #     selectedCounty,
+#    #     brush
+#    ).transform_filter(
+#        selectedCounty
+#    ).properties(width=600,height=200,title="Number of people visiting restaurants")
+#
+#st.write(allDataChart)
 
 # #--version 1 combine
 # emotionalBase = alt.layer(commWorryChart,selfWorryChart).encode(
