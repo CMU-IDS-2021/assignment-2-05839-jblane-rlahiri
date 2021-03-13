@@ -65,24 +65,10 @@ barDatadf = createCsvDf("barData.csv")
 restaurantDatadf = createCsvDf("restaurantData.csv")
 commWorrydf = createCsvDf("commWorry.csv")
 selfWorrydf = createCsvDf("selfWorry.csv")
+
 countyList = set(list(barDatadf['name'])+list(restaurantDatadf['name'])+list(commWorrydf['name'])+list(selfWorrydf['name']))
+# countyList = countyList.sort()
 
-#---Show Raw Data data table
-
-#BarData
-if st.checkbox("Show me the raw data for bar visits"):
-    st.write(barDatadf)    
-#RestaurantData
-if st.checkbox("Show me the raw data restaurant visits"):
-    st.write(restaurantDatadf)
-#CommunityWorry Data
-if st.checkbox("Show me the raw data worry about illness in community"):
-    st.write(commWorrydf)
-#SelfWorry Data
-if st.checkbox("Show me the raw data becoming ill"):
-    st.write(selfWorrydf)
-# if st.checkbox("Show me the list of counties"):
-#     st.write(countyList)
 
 
 
@@ -183,97 +169,139 @@ if st.checkbox("Show me the raw data becoming ill"):
 
 
 #---Select County Dropdown--
-county_dropdown = alt.binding_select(options=list(countyList))
+county_dropdown = alt.binding_select(options=list(set(countyList)))
 selectedCounty = alt.selection_single(fields=['name'],bind=county_dropdown, name='PA County:')
 
 #---brush select area to focus on
-brush = alt.selection (type='interval')
+brush = alt.selection(type = 'interval',encodings=['x'])
 
 #---slider select for date
 
 
 #---commWorry chart
-commWorryChart = alt.Chart(commWorrydf).mark_line(point = True).encode(
-    alt.X("monthdate(time_value):O",axis=alt.Axis(title='Date')),
+commWorryChart = alt.Chart(commWorrydf).mark_area(color='red').encode(
+    alt.X("monthdate(time_value):T",axis=alt.Axis(title='Date')),
     alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
     tooltip=[alt.Tooltip('geo_value',title = 'FIPS'),alt.Tooltip('monthdate(time_value)',title = 'date'), alt.Tooltip('value',title='Value')],
-    color=alt.condition(brush, 'Cylinders:O', alt.value('grey')),
+    # color=alt.condition(brush, 'Cylinders:O', alt.value('lightgray')),
     #opacity=alt.condition(selectedCounty,alt.value(1),alt.value(0.05))
     
-    ).add_selection(
-        selectedCounty,
-        brush
+    # ).add_selection(
+    #     selectedCounty,
+    #     brush
     ).transform_filter(
         selectedCounty
-    ).properties(width=400,height=200,title="Percent of People who know someone with COVID-like symptoms")
+    ).properties(width=600,height=200,title="Percent of People who know someone with COVID-like symptoms")
 
 # st.write(commWorryChart)
 
 #--selfWorry chart
 
-selfWorryChart = alt.Chart(selfWorrydf).mark_line(point = True).encode(
-    alt.X("monthdate(time_value):O",axis=alt.Axis(title='Date')),
+selfWorryChart = alt.Chart(selfWorrydf).mark_area(color='purple').encode(
+    alt.X("monthdate(time_value):T",axis=alt.Axis(title='Date')),
     alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
     tooltip=[alt.Tooltip('geo_value',title = 'FIPS'),alt.Tooltip('monthdate(time_value)',title = 'date'), alt.Tooltip('value',title='Value')],
-    color=alt.condition(brush, 'Cylinders:O', alt.value('grey')),
+    # color=alt.condition(brush, 'Cylinders:O', alt.value('lightgray')),
     #opacity=alt.condition(selectedCounty,alt.value(1),alt.value(0.05))
     
-    ).add_selection(
-        selectedCounty,
-        brush
-    ).transform_filter(
-        selectedCounty
-    ).properties(width=400,height=200,title="Percent of People who are afraid they or someone they know will become seriously ill from COVID-19 ")
+    # ).add_selection(
+    #     selectedCounty,
+    #     brush
+     ).transform_filter(
+         selectedCounty
+     ).properties(width=600,height=200,title="Percent of People who are afraid they or someone they know will become seriously ill from COVID-19 ")
 
 # st.write(selfWorryChart)
 
 #--barData chart
-barDataChart = alt.Chart(barDatadf).mark_line(point = True).encode(
-    alt.X("monthdate(time_value):O",axis=alt.Axis(title='Date')),
+barDataChart = alt.Chart(barDatadf).mark_line(color = 'green').encode(
+    alt.X("monthdate(time_value):T",axis=alt.Axis(title='Date'),scale=alt.Scale(domain=brush)),
     alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
     tooltip=[alt.Tooltip('geo_value',title = 'FIPS'),alt.Tooltip('monthdate(time_value)',title = 'date'), alt.Tooltip('value',title='Value')],
-    color=alt.condition(brush, 'Cylinders:O', alt.value('grey')),
+    # color=alt.condition(brush, 'Cylinders:O', alt.value('lightgray')),
     #opacity=alt.condition(selectedCounty,alt.value(1),alt.value(0.05))
     
-    ).add_selection(
-        selectedCounty,
-        brush
+    # ).add_selection(
+    #     selectedCounty, 
+    #     brush
     ).transform_filter(
         selectedCounty
-    ).properties(width=400,height=200,title="Percent of People who know someone with COVID-like symptoms")
+    ).properties(width=600,height=200,title="Number of people visiting bars")
 
 # st.write(barDataChart)
 
 #--restaurant data chart
-restaurantDataChart = alt.Chart(restaurantDatadf).mark_line(point = True).encode(
-    alt.X("monthdate(time_value):O",axis=alt.Axis(title='Date')),
+restaurantDataChart = alt.Chart(restaurantDatadf).mark_line( color = 'blue').encode(
+    alt.X("monthdate(time_value):T",axis=alt.Axis(title='Date'),scale=alt.Scale(domain=brush)),
     alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
     tooltip=[alt.Tooltip('geo_value',title = 'FIPS'),alt.Tooltip('monthdate(time_value)',title = 'date'), alt.Tooltip('value',title='Value')],
-    color=alt.condition(brush, 'Cylinders:O', alt.value('grey')),
+    # color=alt.condition(brush, 'Cylinders:O', alt.value('lightgray')),
     #opacity=alt.condition(selectedCounty,alt.value(1),alt.value(0.05))
     
-    ).add_selection(
-        selectedCounty,
-        brush
+    # ).add_selection(
+    #     selectedCounty,
+    #     brush
     ).transform_filter(
         selectedCounty
-    ).properties(width=400,height=200,title="Percent of People who know someone with COVID-like symptoms")
+    ).properties(width=600,height=200,title="Number of people visiting restaurants")
 
 # st.write(restaurantDataChart)
 
 
-#--combine all the charts together
-# emotional = alt.layer(barDataChart, restaurantDataChart).resolve_scale(
-#     y='independent')
-# st.write(emotional)
+# #--version 1 combine
+# emotionalBase = alt.layer(commWorryChart,selfWorryChart).encode(
+#     # color=alt.condition(brush, 'Cylinders:O', alt.value('lightgray')),
+#     ).add_selection(
+#         selectedCounty,
+#         brush
+#     ).properties(width=500,height=500,title="Percent of People are worried about COVID-19 or know someone with symptoms"
+#     # ).transform_calculate(
+#     # worryLegend = 
+#     )
+# # st.write(emotional)
 
-#vCombine = alt.vconcat(commWorryChart,selfWorryChart,barDataChart,restaurantDataChart)
-#st.write(vCombine)
-#st.write(commWorryChart|selfWorryChart|barDataChart|restaurantDataChart)
-st.write(commWorryChart+selfWorryChart)
+# behavioralBase = alt.layer(barDataChart,restaurantDataChart).encode(
+#     alt.X("monthdate(time_value):O",axis=alt.Axis(title='Date'),scale=alt.Scale(domain=brush))
+#     ).add_selection(
+#         selectedCounty,
+#         brush
+#     ).properties(width=500,height=500,title="Number of People Going to Bars and Restaurants")
+# # st.write(behavioral)
+
+# vCombine = alt.vconcat(emotionalBase,behavioralBase) #vertical concat two combined charts
+# st.write(vCombine)
+
+#---version 2 combine
+#st.write(commWorryChart|selfWorryChart|barDataChart|restaurantDataChart) #horizontal concat
+
+#---version 3 combine
+#st.write(commWorryChart+selfWorryChart) #layer
+
+#---version 4 combine #vertical concat all 4
+vconcatChart=alt.vconcat(commWorryChart,selfWorryChart,barDataChart,restaurantDataChart).add_selection(
+        selectedCounty,
+        brush
+        )
+st.write(vconcatChart)
 
     
-    
+   #---Show Raw Data data table
+
+#BarData
+if st.checkbox("Show me the raw data for bar visits"):
+    st.write(barDatadf)    
+#RestaurantData
+if st.checkbox("Show me the raw data restaurant visits"):
+    st.write(restaurantDatadf)
+#CommunityWorry Data
+if st.checkbox("Show me the raw data worry about illness in community"):
+    st.write(commWorrydf)
+#SelfWorry Data
+if st.checkbox("Show me the raw data becoming ill"):
+    st.write(selfWorrydf)
+# if st.checkbox("Show me the list of counties"):
+#     st.write(countyList)
+ 
 
 
 

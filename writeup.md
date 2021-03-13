@@ -16,15 +16,20 @@ The goal of this project is to determine if people's concern are about whether o
 TODO: **A rationale for your design decisions.** How did you choose your particular visual encodings and interaction techniques? What alternatives did you consider and how did you arrive at your ultimate choices? state data - less , dates - less 
 Challenges: large amount of data too many data sets
 Data: how to organize the data? csv? pull? 
-
+Challenge: combining multiple df on to the same chart using layering. figuring out how to differentiate the charts by color and using the brushing technqiue between both so it would be useful.
+Not all counties have data.
+Future work: incorporate a field with the overall aggregated state data to compensate for the lack of data in many of the PA counties.
+Using SQL
 ## Development
 
-Once assigned the project, Janice (J) and Riddhiman (R) met at least twice a week to discuss the planning process and goals, reevaluate the direction of the project, and discuss any challenges or recommendations. In the first meeting, we focused on making a plan to meet certain milestones by the assignment due date and assigning responsibilities. J was responsibility for visualizing the emotional states, and R was responsibility for the map and the non-essential activities. Both contributed on ideas to help improve each other's area of focus as well as the overall scheme of the project. Because of the constraints of other classes, R conducted most of his programming during the earlier parts of the planning period, and J conducted the bulk of her programming during the later part. We still met before completing the assignment to agree on the design and make any last minute changes. Since Altair and Streamlit are new to both of us, it probably took about 20 hours each of programming time. Additionally, we conducted 5 one-hour long planning meetings and corresponded through email. The most 
+Once assigned the project, Janice (J) and Riddhiman (R) met at least twice a week to discuss the planning process and goals, reevaluate the direction of the project, and discuss any challenges or recommendations. In the first meeting, we focused on making a plan to meet certain milestones by the assignment due date and assigning responsibilities. J was responsibility for visualizing the emotional states as well as formatting the input data for the project, and R was responsibility for the map and the non-essential activities. Both contributed on ideas to help improve each other's area of focus as well as the overall scheme of the project. Because of the constraints of other classes, R conducted most of his programming during the earlier parts of the planning period, and J conducted the bulk of her programming during the later part. We still met before completing the assignment to agree on the design and make any last minute changes. Since Altair and Streamlit are new to both of us, it probably took about 20 hours each of programming time. Additionally, we conducted 5 one-hour long planning meetings and corresponded through email. The most 
 
 
 
 TODO: **An overview of your development process.** Describe how the work was split among the team members. Include a commentary on the development process, including answers to the following questions: Roughly how much time did you spend developing your application (in people-hours)? What aspects took the most time?
 
 ## Success Story
+
+When looking at major counties such as Alleghany, Philadephia, and Chester counties, the general trend shows that as people are more worried about the effects of COVID-19 on themselves and their close family while also knowing someone in the community, the general trend for people going to bars and restaurants decreased. This is particularly interesting because this trend is mostly observed in the latter half of the time period in December, where more people are on vacation, have time off, and typically prefer to enjoy company with others.
 
 TODO:  **A success story of your project.** Describe an insight or discovery you gain with your application that relates to the goals of your project.
