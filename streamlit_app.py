@@ -161,15 +161,17 @@ st.title("PA Map of All Metrics by Date")
 st.markdown("**Select a Metric (button) and Date (dropdown)**")
 #plot_on_PA(bar_dataPA)
 
-my_button = st.radio("COVID-19 Metrics", ('Show the distribution of Bar visits','Show the distribution of Restaurant visits', 'Show the distribution of people staying 3-6 hours away from home','Show the distribution of people staying greater than 6 hours away from home')) 
-if my_button=='Show the distribution of Bar visits':
+my_button = st.radio("COVID-19 Metrics", ('Show the distribution of Bar visits','Show the distribution of Restaurant visits', 'Show the distribution of those reporting illness in the community','Show the distribution of people sworried about becoming ill')) 
+
+if my_button == 'Show the distribution of those reporting illness in the community':
+    plot_on_PA(fetch(5))
+elif my_button=='Show the distribution of people sworried about becoming ill':
+    plot_on_PA(fetch(6))
+elif my_button=='Show the distribution of Bar visits':
     plot_on_PA(fetch(3))
-elif my_button=='Show the distribution of Restaurant visits':
+else: # my_button=='Show the distribution of Restaurant visits':
     plot_on_PA(fetch(4))
-elif my_button=='Show the distribution of people staying 3-6 hours away from home':
-    plot_on_PA(fetch(1))
-else:
-     plot_on_PA(fetch(2))
+
 
 #--------------------------------------------------
 #--Time versus Value charts (Line)
@@ -245,18 +247,23 @@ st.write(vconcatChart)
 #---Show Raw Data data table
 st.title("View Raw Data Tables")
 st.markdown("**Select a checkbox**")
+
+#CommunityWorry Data
+if st.checkbox("Show me the raw data for those reporting illness in the community"):
+    st.write(commWorrydf)
+    
+#SelfWorry Data
+if st.checkbox("Show me the raw data worrid about becoming ill"):
+    st.write(selfWorrydf)
+    
 #BarData
 if st.checkbox("Show me the raw data for bar visits"):
     st.write(barDatadf)    
 #RestaurantData
-if st.checkbox("Show me the raw data restaurant visits"):
+if st.checkbox("Show me the raw data for restaurant visits"):
     st.write(restaurantDatadf)
-#CommunityWorry Data
-if st.checkbox("Show me the raw data worry about illness in community"):
-    st.write(commWorrydf)
-#SelfWorry Data
-if st.checkbox("Show me the raw data becoming ill"):
-    st.write(selfWorrydf)
+
+
 # if st.checkbox("Show me the list of counties"):
 #     st.write(countyList)
  

@@ -308,10 +308,10 @@ st.write(vconcatChart)
 if st.checkbox("Show me the raw data for bar visits"):
     st.write(barDatadf)    
 #RestaurantData
-if st.checkbox("Show me the raw data restaurant visits"):
+if st.checkbox("Show me the raw data for restaurant visits"):
     st.write(restaurantDatadf)
 #CommunityWorry Data
-if st.checkbox("Show me the raw data worry about illness in community"):
+if st.checkbox("Show me the raw for those data worry about illness in community"):
     st.write(commWorrydf)
 #SelfWorry Data
 if st.checkbox("Show me the raw data becoming ill"):
