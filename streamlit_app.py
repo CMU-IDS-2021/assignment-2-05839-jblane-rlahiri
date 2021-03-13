@@ -165,7 +165,7 @@ my_button = st.radio("COVID-19 Metrics", ('Show the distribution of Bar visits',
 
 if my_button == 'Show the distribution of those reporting illness in the community':
     plot_on_PA(fetch(5))
-elif my_button=='Show the distribution of people sworried about becoming ill':
+elif my_button=='Show the distribution of people worried about becoming ill':
     plot_on_PA(fetch(6))
 elif my_button=='Show the distribution of Bar visits':
     plot_on_PA(fetch(3))
@@ -253,7 +253,7 @@ if st.checkbox("Show me the raw data for those reporting illness in the communit
     st.write(commWorrydf)
     
 #SelfWorry Data
-if st.checkbox("Show me the raw data worrid about becoming ill"):
+if st.checkbox("Show me the raw data worried about becoming ill"):
     st.write(selfWorrydf)
     
 #BarData
