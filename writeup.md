@@ -18,7 +18,7 @@ When trying to tell our story, we wanted to put a large map of PA with access to
 2) Detailed time vs. value charts
 Next, we tried to get more into the details of the data but displaying four charts that display each of the different datasets.
 
-3) Finally, there is an option to view the raw data, if someone were curious.
+3) Finally, there is an option to view the raw data, if someone were curious. This uses the checkbox tool.
 
 4) Challenges
 We encountered several challenges while working on this project. Because the data sets were from four different input sources as opposed to a single data set, we faced issues with the layering process. Altair typically works best with a combined data set using long-form. The primary issues involved linking them through the brushing and selection process for matching the brush selections as well as connecting the charts with a single dropdown for all of the counties. This was facilitated by using the vConcat function and adding the selection portion to only a single selection for a specific county. 

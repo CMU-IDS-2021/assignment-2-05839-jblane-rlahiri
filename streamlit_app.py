@@ -6,7 +6,7 @@ import covidcast
 import pandasql
 from geopy.geocoders import Nominatim
 
-st.title("Covid-19 Public Behaviour Analysis in PA 🦠 ")
+st.title("🦠 Covid-19 Public Behaviour Analysis in PA ")
 st.text("(November 1, 2020 to December 31, 2020)")
 #--https://share.streamlit.io/cmu-ids-2021/assignment-2-05839-jblane-rlahiri
 
@@ -78,100 +78,106 @@ countyList.sort()
 #TODO - See if you can use the csv files instead of fetch
 
 
-# # Call the function with the dataset to get a plot on Pennsylvania
-# def plot_on_PA(bar_dataPA):
-#     from vega_datasets import data
-#     counties = alt.topo_feature(data.us_10m.url, 'counties')
-#     bar_dataPA=pandasql.sqldf("select * from bar_dataPA where geo_value like '42%'")
-#     county_data=pandasql.sqldf("select distinct geo_value from bar_dataPA")
-#     county_details=dict()
+# Call the function with the dataset to get a plot on Pennsylvania
+def plot_on_PA(bar_dataPA):
+    from vega_datasets import data
+    counties = alt.topo_feature(data.us_10m.url, 'counties')
+    bar_dataPA=pandasql.sqldf("select * from bar_dataPA where geo_value like '42%'")
+    county_data=pandasql.sqldf("select distinct geo_value from bar_dataPA")
+    county_details=dict()
 
-#     l=county_data["geo_value"].tolist()
+    l=county_data["geo_value"].tolist()
 
-#     for i in range(county_data.shape[0]):
-#         county_details.update({str(covidcast.fips_to_name(county_data.iloc[i]))[2:len(str(covidcast.fips_to_name(county_data.iloc[i])))-2]:l[i]})
+    for i in range(county_data.shape[0]):
+        county_details.update({str(covidcast.fips_to_name(county_data.iloc[i]))[2:len(str(covidcast.fips_to_name(county_data.iloc[i])))-2]:l[i]})
 
-#     data6hrs = pandasql.sqldf("select * from bar_dataPA where geo_value like '42%'")
+    data6hrs = pandasql.sqldf("select * from bar_dataPA where geo_value like '42%'")
 
-#     map_pennsylvania =(
-#     alt.Chart(data = counties,
-#               )
-#     .mark_geoshape(
-#         stroke='black',
-#         strokeWidth=1,
-#         fill='lightyellow'
-#     )
-#     .transform_calculate(state_id = "(datum.id / 1000)|0")
-#     .transform_filter((alt.datum.state_id)==42)
-#     .transform_lookup(
-#         lookup='data6hrs',
-#         from_=alt.LookupData(data6hrs,'geo_value',['value']),
+    map_pennsylvania =(
+    alt.Chart(data = counties,
+               )
+    .mark_geoshape(
+        stroke='black',
+        strokeWidth=1,
+        fill='lightyellow'
+    )
+    .transform_calculate(state_id = "(datum.id / 1000)|0")
+    .transform_filter((alt.datum.state_id)==42)
+    .transform_lookup(
+        lookup='data6hrs',
+        from_=alt.LookupData(data6hrs,'geo_value',['value']),
         
          
-#         ).properties(width=500,height=400)
-#     )
+        ).properties(width=500,height=400)
+    )
 
-#     geolocator = Nominatim(user_agent="streamlit_app.py")
+    geolocator = Nominatim(user_agent="streamlit_app.py")
 
-#     lat=[]
-#     lon=[]
-#     coun=[]
-#     @st.cache
-#     def sw():
-#         lsd={}
-#         for i in county_details.keys():
-#             sss=i+", PA"
-#             y=geolocator.geocode(sss)
-#             r=[y.latitude,y.longitude]
-#             lat.append(y.latitude)
-#             #st.write(y.latitude)
-#             lon.append(y.longitude)
-#             coun.append(county_details[i])
-#             lsd.update({county_details[i]:r})
-#         return lat,lon,coun
+    lat=[]
+    lon=[]
+    coun=[]
+    @st.cache
+    def sw():
+        lsd={}
+        for i in county_details.keys():
+            sss=i+", PA"
+            y=geolocator.geocode(sss)
+            r=[y.latitude,y.longitude]
+            lat.append(y.latitude)
+            #st.write(y.latitude)
+            lon.append(y.longitude)
+            coun.append(county_details[i])
+            lsd.update({county_details[i]:r})
+        return lat,lon,coun
 
-#     [lat,lon,coun]=sw()
-#     det={'County':coun,'Latitude':lat,'Longitude':lon}
+    [lat,lon,coun]=sw()
+    det={'County':coun,'Latitude':lat,'Longitude':lon}
 
-#     gb=pd.DataFrame(det)
+    gb=pd.DataFrame(det)
 
-#     bar_dataPA['time_value']=bar_dataPA['time_value'].str.slice(0, 10) 
-#     kal=pandasql.sqldf("select bar_dataPA.geo_value,bar_dataPA.time_value,bar_dataPA.value,gb.Latitude,gb.Longitude from bar_dataPA,gb where gb.County=bar_dataPA.geo_value")
+    bar_dataPA['time_value']=bar_dataPA['time_value'].str.slice(0, 10) 
+    kal=pandasql.sqldf("select bar_dataPA.geo_value,bar_dataPA.time_value,bar_dataPA.value,gb.Latitude,gb.Longitude from bar_dataPA,gb where gb.County=bar_dataPA.geo_value")
 
-#     dg=pandasql.sqldf("select distinct time_value from kal")
+    dg=pandasql.sqldf("select distinct time_value from kal")
 
-#     input_drop=alt.binding_select(options=dg['time_value'].tolist(),name="Select Date")
-#     picked=alt.selection_single(encodings=["color"],bind=input_drop) 
+    input_drop=alt.binding_select(options=dg['time_value'].tolist(),name="Select Date")
+    picked=alt.selection_single(encodings=["color"],bind=input_drop) 
 
-#     points = alt.Chart(kal).mark_circle().encode(
-#         longitude='Longitude:Q',
-#         latitude='Latitude:Q',
-#         size='value:Q',
-#         color=alt.condition(picked,'time_value',alt.value('lightgray'), legend=None),
-#         opacity=alt.condition(picked,alt.value(0.5),alt.value(0)),
+    points = alt.Chart(kal).mark_circle().encode(
+        longitude='Longitude:Q',
+        latitude='Latitude:Q',
+        size='value:Q',
+        color=alt.condition(picked,'time_value',alt.value('lightgray'), legend=None),
+        opacity=alt.condition(picked,alt.value(0.5),alt.value(0)),
 
 
-#         tooltip=['geo_value','value']
-#     ).add_selection(picked).transform_filter(picked).properties(width=500,height=400)
+        tooltip=['geo_value','value']
+    ).add_selection(picked).transform_filter(picked).properties(width=500,height=400)
 
-#     st.write(map_pennsylvania+points)
+    st.write(map_pennsylvania+points)
+    
+    
+st.title("PA Map of All Metrics by Date")
+st.markdown("**Select a Metric (button) and Date (dropdown)**")
+#plot_on_PA(bar_dataPA)
 
-# st.write("Shown below is the Distribution of Restaurant Visits on the Map of Pennsylvania, Please select a Date to view the distribution on a particular Date")
-# #plot_on_PA(bar_dataPA)
-
-# my_button = st.radio("Please Select an Option to see the Distribution on the Pennsylvania Map", ('Show the distribution of Bar visits','Show the distribution of Restaurant visits', 'Show the distribution of people staying 3-6 hours away from home','Show the distribution of people staying greater than 6 hours away from home')) 
-# if my_button=='Show the distribution of Bar visits':
-#     plot_on_PA(fetch(3))
-# elif my_button=='Show the distribution of Restaurant visits':
-#     plot_on_PA(fetch(4))
-# elif my_button=='Show the distribution of people staying 3-6 hours away from home':
-#     plot_on_PA(fetch(1))
-# else:
-#      plot_on_PA(fetch(2))
+my_button = st.radio("COVID-19 Metrics", ('Show the distribution of Bar visits','Show the distribution of Restaurant visits', 'Show the distribution of people staying 3-6 hours away from home','Show the distribution of people staying greater than 6 hours away from home')) 
+if my_button=='Show the distribution of Bar visits':
+    plot_on_PA(fetch(3))
+elif my_button=='Show the distribution of Restaurant visits':
+    plot_on_PA(fetch(4))
+elif my_button=='Show the distribution of people staying 3-6 hours away from home':
+    plot_on_PA(fetch(1))
+else:
+     plot_on_PA(fetch(2))
 
 #--------------------------------------------------
 #--Time versus Value charts (Line)
 #--------------------------------------------------
+st.title("Compare the individual metrics over time")
+st.markdown("**1) Select a PA County from the dropdown (below charts)**")
+st.markdown("**2) Highlight any of the first two graph (emotional charts) to compare with last two (behavior)**")
+st.markdown("Note: Not all counties have data for each metric for every time period (Try large counties such as Alleghany, Philadelphia, York, etc.)")
 
 #---Select County Dropdown--
 county_dropdown = alt.binding_select(options=list(countyList))
@@ -180,25 +186,17 @@ selectedCounty = alt.selection_single(fields=['name'],bind=county_dropdown, name
 #---brush select area to focus on
 brush = alt.selection(type = 'interval',encodings=['x'])
 
-#---slider select for date
-
 
 #---commWorry chart
 commWorryChart = alt.Chart(commWorrydf).mark_area(color='red').encode(
     alt.X("monthdate(time_value):T",axis=alt.Axis(title='Date')),
     alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
     tooltip=[alt.Tooltip('geo_value',title = 'FIPS'),alt.Tooltip('monthdate(time_value)',title = 'date'), alt.Tooltip('value',title='Value')],
-    # color=alt.condition(brush, 'Cylinders:O', alt.value('lightgray')),
-    #opacity=alt.condition(selectedCounty,alt.value(1),alt.value(0.05))
-    
-    # ).add_selection(
-    #     selectedCounty,
-    #     brush
+
     ).transform_filter(
         selectedCounty
     ).properties(width=600,height=200,title="Percent of People who know someone with COVID-like symptoms")
 
-# st.write(commWorryChart)
 
 #--selfWorry chart
 
@@ -206,81 +204,35 @@ selfWorryChart = alt.Chart(selfWorrydf).mark_area(color='purple').encode(
     alt.X("monthdate(time_value):T",axis=alt.Axis(title='Date')),
     alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
     tooltip=[alt.Tooltip('geo_value',title = 'FIPS'),alt.Tooltip('monthdate(time_value)',title = 'date'), alt.Tooltip('value',title='Value')],
-    # color=alt.condition(brush, 'Cylinders:O', alt.value('lightgray')),
-    #opacity=alt.condition(selectedCounty,alt.value(1),alt.value(0.05))
-    
-    # ).add_selection(
-    #     selectedCounty,
-    #     brush
+
      ).transform_filter(
          selectedCounty
      ).properties(width=600,height=200,title="Percent of People who are afraid they or someone they know will become seriously ill from COVID-19 ")
 
-# st.write(selfWorryChart)
+
 
 #--barData chart
 barDataChart = alt.Chart(barDatadf).mark_line(color = 'green').encode(
     alt.X("monthdate(time_value):T",axis=alt.Axis(title='Date'),scale=alt.Scale(domain=brush)),
     alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
     tooltip=[alt.Tooltip('geo_value',title = 'FIPS'),alt.Tooltip('monthdate(time_value)',title = 'date'), alt.Tooltip('value',title='Value')],
-    # color=alt.condition(brush, 'Cylinders:O', alt.value('lightgray')),
-    #opacity=alt.condition(selectedCounty,alt.value(1),alt.value(0.05))
-    
-    # ).add_selection(
-    #     selectedCounty, 
-    #     brush
+
     ).transform_filter(
         selectedCounty
     ).properties(width=600,height=200,title="Number of people visiting bars")
 
-# st.write(barDataChart)
 
 #--restaurant data chart
 restaurantDataChart = alt.Chart(restaurantDatadf).mark_line( color = 'blue').encode(
     alt.X("monthdate(time_value):T",axis=alt.Axis(title='Date'),scale=alt.Scale(domain=brush)),
     alt.Y("value:Q",axis=alt.Axis(title='Percentage of people')),
     tooltip=[alt.Tooltip('geo_value',title = 'FIPS'),alt.Tooltip('monthdate(time_value)',title = 'date'), alt.Tooltip('value',title='Value')],
-    # color=alt.condition(brush, 'Cylinders:O', alt.value('lightgray')),
-    #opacity=alt.condition(selectedCounty,alt.value(1),alt.value(0.05))
-    
-    # ).add_selection(
-    #     selectedCounty,
-    #     brush
+
     ).transform_filter(
         selectedCounty
     ).properties(width=600,height=200,title="Number of people visiting restaurants")
 
-# st.write(restaurantDataChart)
 
-
-# #--version 1 combine
-# emotionalBase = alt.layer(commWorryChart,selfWorryChart).encode(
-#     # color=alt.condition(brush, 'Cylinders:O', alt.value('lightgray')),
-#     ).add_selection(
-#         selectedCounty,
-#         brush
-#     ).properties(width=500,height=500,title="Percent of People are worried about COVID-19 or know someone with symptoms"
-#     # ).transform_calculate(
-#     # worryLegend = 
-#     )
-# # st.write(emotional)
-
-# behavioralBase = alt.layer(barDataChart,restaurantDataChart).encode(
-#     alt.X("monthdate(time_value):O",axis=alt.Axis(title='Date'),scale=alt.Scale(domain=brush))
-#     ).add_selection(
-#         selectedCounty,
-#         brush
-#     ).properties(width=500,height=500,title="Number of People Going to Bars and Restaurants")
-# # st.write(behavioral)
-
-# vCombine = alt.vconcat(emotionalBase,behavioralBase) #vertical concat two combined charts
-# st.write(vCombine)
-
-#---version 2 combine
-#st.write(commWorryChart|selfWorryChart|barDataChart|restaurantDataChart) #horizontal concat
-
-#---version 3 combine
-#st.write(commWorryChart+selfWorryChart) #layer
 
 #---version 4 combine #vertical concat all 4
 vconcatChart=alt.vconcat(commWorryChart,selfWorryChart,barDataChart,restaurantDataChart).add_selection(
@@ -290,8 +242,9 @@ vconcatChart=alt.vconcat(commWorryChart,selfWorryChart,barDataChart,restaurantDa
 st.write(vconcatChart)
 
     
-   #---Show Raw Data data table
-
+#---Show Raw Data data table
+st.title("View Raw Data Tables")
+st.markdown("**Select a checkbox**")
 #BarData
 if st.checkbox("Show me the raw data for bar visits"):
     st.write(barDatadf)    
