@@ -161,7 +161,7 @@ st.title("PA Map of All Metrics by Date")
 st.markdown("**Select a Metric (button) and Date (dropdown)**")
 #plot_on_PA(bar_dataPA)
 
-my_button = st.radio("COVID-19 Metrics", ('Show the distribution of Bar visits','Show the distribution of Restaurant visits', 'Show the distribution of those reporting illness in the community','Show the distribution of people sworried about becoming ill')) 
+my_button = st.radio("COVID-19 Metrics", ('Show the distribution of Bar visits','Show the distribution of Restaurant visits', 'Show the distribution of those reporting illness in the community','Show the distribution of people worried about becoming ill')) 
 
 if my_button == 'Show the distribution of those reporting illness in the community':
     plot_on_PA(fetch(5))
