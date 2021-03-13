@@ -11,7 +11,7 @@ st.title("Public Behaviour Analysis in Covid-19 🦠 in PA (November 1, 2020 to 
 
 
 #PREP----Pull data from COVID just to get the csv files----
-# @st.cache
+@st.cache
 def fetch(dat):
 
     #safegraph: The number of daily visits made by those with SafeGraph’s apps to bar-related POIs in a certain region, per 100,000 population
@@ -45,7 +45,7 @@ def fetch(dat):
 # selfWorry.to_csv("selfWorry.csv")
 
 #--create df from csv files, keep desired columns, combine counties with FIPS-- This is different from pulling it off the covidcast server
-@st.cache
+#@st.cache
 def createCsvDf(valueCSVfile): #given filename for metric csv file
     fipsData = pd.read_csv("Fips_countyname.csv") #list of county names and fips to dataframe (cite: https://github.com/kjhealy/fips-codes)
     finalDf = pd.read_csv(valueCSVfile) #metric csv file to dataframe
