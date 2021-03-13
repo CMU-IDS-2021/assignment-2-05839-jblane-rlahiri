@@ -11,7 +11,7 @@ st.title("Public Behaviour Analysis in Covid-19 🦠 in PA (November 1, 2020 to 
 
 
 #PREP----Pull data from COVID just to get the csv files----
-@st.cache
+# @st.cache
 def fetch(dat):
 
     #safegraph: The number of daily visits made by those with SafeGraph’s apps to bar-related POIs in a certain region, per 100,000 population
