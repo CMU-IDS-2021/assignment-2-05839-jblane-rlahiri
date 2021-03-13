@@ -6,10 +6,13 @@ import covidcast
 import pandasql
 from geopy.geocoders import Nominatim
 
-st.title("Public Behaviour Analysis in Covid-19 🦠 in PA (November 1, 2020 to December 31, 2020)📊")
+st.title("Covid-19 Public Behaviour Analysis in PA 🦠 ")
+st.text("(November 1, 2020 to December 31, 2020)")
 #--https://share.streamlit.io/cmu-ids-2021/assignment-2-05839-jblane-rlahiri
 
+st.markdown("_**Welcome!**_ COVID-19 has become large part of our every day lives. People walk around in public areas covered in masks trying to maintain a six feet distance away from each other. School attendance is limited in many areas of the country, and some people have not seen grandparents in many months. This past February (2021), the number of U.S. deaths related to COVID-19 exceeded half a million people. There is no wonder that citizens worry about whether or not they or people in their community may contract the virus. With the increasing death toll, though, how worried are people about becoming sick or spreading the sickness to others? Are they worried enough to quarantine themselves, only leaving the home for essential items?" )
 
+st.markdown(" The purpose of this visualization is to take a look at the emotional state of counties within Pennsylvania and compare the information to whether or not this affects overall tendencies to conduct non-essential activities such as going to bars and restaurants.")
 #PREP----Pull data from COVID just to get the csv files----
 @st.cache
 def fetch(dat):
@@ -60,8 +63,8 @@ barDatadf = createCsvDf("barData.csv")
 restaurantDatadf = createCsvDf("restaurantData.csv")
 commWorrydf = createCsvDf("commWorry.csv")
 selfWorrydf = createCsvDf("selfWorry.csv")
-countyList = set(list(barDatadf['name'])+list(restaurantDatadf['name'])+list(commWorrydf['name'])+list(selfWorrydf['name']))
-# countyList = countyList.sort()
+countyList = list(set(list(barDatadf['name'])+list(restaurantDatadf['name'])+list(commWorrydf['name'])+list(selfWorrydf['name'])))
+countyList.sort()
 
 
 
@@ -171,7 +174,7 @@ countyList = set(list(barDatadf['name'])+list(restaurantDatadf['name'])+list(com
 #--------------------------------------------------
 
 #---Select County Dropdown--
-county_dropdown = alt.binding_select(options=list(set(countyList)))
+county_dropdown = alt.binding_select(options=list(countyList))
 selectedCounty = alt.selection_single(fields=['name'],bind=county_dropdown, name='PA County:')
 
 #---brush select area to focus on
