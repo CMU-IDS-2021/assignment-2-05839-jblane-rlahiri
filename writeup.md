@@ -1,6 +1,8 @@
 # Covid-19 Public Behaviour Analysis in PA 
 
-![A screenshot of your application. Could be a GIF.](screenshot1.png)(screenshot2.png)(screenshot3.png)
+![A screenshot of your application. Could be a GIF.](screenshot1.png)
+![A screenshot of your application. Could be a GIF.](screenshot2.png)
+![A screenshot of your application. Could be a GIF.](screenshot3.png)
 
 ABSTRACT: COVID-19 has become large part of our every day lives. People walk around in public areas covered in masks trying to maintain a six feet distance away from each other. School attendance is limited in many areas of the country, and some people have not seen grandparents in many months. This past February (2021), the number of U.S. deaths related to COVID-19 exceeded half a million people. There is no wonder that citizens worry about whether or not they or people in their community may contract the virus. With the increasing death toll, though, how worried are people about becoming sick or spreading the sickness to others? Are they worried enough to quarantine themselves, only leaving the home for essential items? The purpose of this visualization is to take a look at the emotional state of counties within Pennsylvania and compare the information to whether or not this affects overall tendencies to conduct non-essential activities such as going to bars and restaurants.
 
