@@ -2,9 +2,9 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 from datetime import date
-import covidcast
-import pandasql
-from geopy.geocoders import Nominatim
+#import covidcast
+#import pandasql
+#from geopy.geocoders import Nominatim
 
 st.title("Public Behaviour Analysis in Covid-19 🦠 in PA (November 1, 2020 to December 31, 2020)📊")
 #--https://share.streamlit.io/cmu-ids-2021/assignment-2-05839-jblane-rlahiri
