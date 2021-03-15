@@ -196,6 +196,7 @@ else: # my_button=='Show the distribution of Restaurant visits':
 st.title("Compare the individual metrics over time")
 st.markdown("**1) Select a PA County from the dropdown (below charts)**")
 st.markdown("**2) Highlight any of the first two graph (emotional charts) to compare with last two (behavior)**")
+st.markdown("Note: The counties shown are the only counties in which there was data for all four datasets.")
 # st.markdown("Note: Not all counties have data for each metric for every time period (Try large counties such as Alleghany, Philadelphia, York, etc.)")
 
 #---Select County Dropdown--
