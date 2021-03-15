@@ -13,17 +13,21 @@ The goal of this project is to determine if people's concern are about whether o
 
 ## Design
 1) Overview Map on Top.
-When trying to tell our story, we wanted to put a large map of PA with access to all of the counties and data. This is our overview of all of the data as well as how it is spread across the counties. Depending on if there is data for the particular county on the specific date, the size of the circle located on a particular county would match the value of the particular metric. A set of radio buttons allow for selection between data sets. A dropdown menu allows for selecting the dates.
+When trying to tell our story, we wanted to put a large map of PA with access to all of the counties and data. This is our overview of all of the data as well as how it is spread across the counties. It also acts as our initial eye-catcher for the page. Here, we integrated Tableau to create a dynamic display of the data on the maps with a hover tool tip. A slider enabled variable dats, and a set of radio buttons allow for selection between data sets. 
 
 2) Detailed time vs. value charts.
-Next, we tried to get more into the details of the data but displaying four charts that display each of the different datasets.
+Next, we tried to get more into the details of the data by displaying four charts that displayed each of the different datasets. A tool tip allows for information for data points and a brushing techniques allows for selection on the top two charts (the emotional) to zoom in on the specific date frame on the lower two charts (behavioral). This gives the flow of using the emotional charts as a independent variable for the behavioral charts to act as a dependent variable.
 
 3) Finally, there is an option to view the raw data, if someone were curious. This uses the checkbox tool.
 
 4) Challenges.
-We encountered several challenges while working on this project. Because the data sets were from four different input sources as opposed to a single data set, we faced issues with the layering process. Altair typically works best with a combined data set using long-form. The primary issues involved linking them through the brushing and selection process for matching the brush selections as well as connecting the charts with a single dropdown for all of the counties. This was facilitated by using the vConcat function and adding the selection portion to only a single selection for a specific county. 
+We encountered several challenges while working on this project.
+
+Because the data sets were from four different input sources as opposed to a single data set, we faced issues with the layering process. Altair typically works best with a combined data set using long-form. The primary issues involved linking them through the brushing and selection process for matching the brush selections as well as connecting the charts with a single dropdown for all of the counties. This was facilitated by using the vConcat function and adding the selection portion to only a single selection for a specific county. 
 
 Another challenge was managing the large amount of data from each of our dataset. The first solution was to reduce our original plan to have the last 6 months to only a 2 month period. The data content was still rather large, and thus, it required caching the data so that it would load faster during multiple iterations and using a csv versus pulling from Covidcast. This also created sizing errors which limited the sizes of the circles on the map, which was solved by truncating anything larger than the max circle size. The biggest problem was that the streamlit app only allocates a certain amount of memory for the app. This would cause an error that was not noticeable when working locally. Therefore, sometimes the app works and sometimes it says that "The app has gone over its resource limits." The app was deploying properly as of the day that the presentation was due. Screenshots have been providing just in case.
+
+Though there was a large amount of data, not all of the data sets had data for all of the counties, making the visualization appear to have excessive gaps. Therefore, this required us to return counties where all four data sets had data for all of the counties. Unfortunately, the returned matches for all four data sets only included 9 of the Pennsylvania counties.
 
 Because of our unfamiliarity with altair, incorporating basic functions took more time than would for an experienced user. This included formatting the data types using pandas and SQL, manipulated the dataframes, adding aesthetics (color, lines vs points, selection filtering, tooltip, legends, axis labeling, chart location, etc.) We made many changes depending on if the aesthetics appeared to flow and were user friendly.
 
@@ -35,4 +39,4 @@ Once assigned the project, Janice (J) and Riddhiman (R) met at least twice a wee
 
 ## Success Story
 
-When looking at major counties such as Alleghany, Philadephia, and Chester counties, the general trend shows that as people are more worried about the effects of COVID-19 on themselves and their close family while also knowing someone in the community, the general trend for people going to bars and restaurants decreased. This is particularly interesting because this trend is mostly observed in the latter half of the time period in December, where more people are on vacation, have time off, and typically prefer to enjoy company with others.
+When looking at major counties, the general trend shows that as people are more worried about the effects of COVID-19 on themselves and their close family in conjunction with knowing someone in the community, the general trend for people going to bars and restaurants decreased. This is particularly interesting because this trend is mostly observed in the latter half of the time period in December, where more people are on vacation, have time off, and typically prefer to enjoy the company of others.
