@@ -158,7 +158,7 @@ def plot_on_PA(bar_dataPA):
     
     
 st.title("PA Map of All Metrics by Date")
-st.markdown("**Select a Metric (button) and Date (dropdown)**")
+st.markdown("**Select a Metric (button) and Date (slider)**")
 st.markdown("Note: Not all counties have data for each metric for every time period")
 
 #plot_on_PA(bar_dataPA)
