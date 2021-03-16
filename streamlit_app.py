@@ -7,7 +7,7 @@ import pandasql
 from geopy.geocoders import Nominatim
 
 st.title("🦠 Covid-19 Public Behaviour Analysis in PA ")
-st.text("(November 1, 2020 to December 31, 2020)")
+st.text("(October 1, 2020 to December 31, 2020)")
 #--https://share.streamlit.io/cmu-ids-2021/assignment-2-05839-jblane-rlahiri
 
 st.markdown("_**Welcome!**_ COVID-19 has become large part of our every day lives. People walk around in public areas covered in masks trying to maintain a six feet distance away from each other. School attendance is limited in many areas of the country, and some people have not seen grandparents in many months. This past February (2021), the number of U.S. deaths related to COVID-19 exceeded half a million people. There is no wonder that citizens worry about whether or not they or people in their community may contract the virus. With the increasing death toll, though, how worried are people about becoming sick or spreading the sickness to others? Are they worried enough to quarantine themselves, only leaving the home for essential items?" )
