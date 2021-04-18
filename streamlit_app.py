@@ -6,7 +6,7 @@ import covidcast
 import pandasql
 from geopy.geocoders import Nominatim
 
-st.title("🦠 Covid-19 Public Behaviour Analysis in PA ")
+st.title("🦠Covid-19 Public Behaviour Analysis in PA ")
 st.text("(October 1, 2020 to December 31, 2020)")
 #--https://share.streamlit.io/cmu-ids-2021/assignment-2-05839-jblane-rlahiri
 
